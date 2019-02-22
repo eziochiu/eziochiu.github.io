@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>eziochiu&#39;s Blog</title>
   <icon>https://www.gravatar.com/avatar/1acddb61a28ee1ed443fc3731c50feb8</icon>
-  <subtitle>傻傻的iOS工程师</subtitle>
+  <subtitle>一个会逆向的iOS工程师</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
