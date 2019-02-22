@@ -5,9 +5,9 @@
   <subtitle>一个会逆向的iOS工程师</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="https://eziochiu.github.io/"/>
   <updated>2019-02-22T09:00:50.444Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>https://eziochiu.github.io/</id>
   
   <author>
     <name>eziochiu</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>hexo 常用指令</title>
-    <link href="http://yoursite.com/2019/02/22/hexo-%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/"/>
-    <id>http://yoursite.com/2019/02/22/hexo-常用指令/</id>
+    <link href="https://eziochiu.github.io/2019/02/22/hexo-%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/"/>
+    <id>https://eziochiu.github.io/2019/02/22/hexo-常用指令/</id>
     <published>2019-02-22T06:36:39.000Z</published>
     <updated>2019-02-22T09:00:50.444Z</updated>
     
@@ -35,19 +35,19 @@
     
     </summary>
     
-      <category term="命令" scheme="http://yoursite.com/categories/%E5%91%BD%E4%BB%A4/"/>
+      <category term="命令" scheme="https://eziochiu.github.io/categories/%E5%91%BD%E4%BB%A4/"/>
     
     
-      <category term="hexo" scheme="http://yoursite.com/tags/hexo/"/>
+      <category term="hexo" scheme="https://eziochiu.github.io/tags/hexo/"/>
     
-      <category term="命令" scheme="http://yoursite.com/tags/%E5%91%BD%E4%BB%A4/"/>
+      <category term="命令" scheme="https://eziochiu.github.io/tags/%E5%91%BD%E4%BB%A4/"/>
     
   </entry>
   
   <entry>
     <title>免越狱钉钉远程打卡</title>
-    <link href="http://yoursite.com/2018/07/15/%E5%85%8D%E8%B6%8A%E7%8B%B1%E9%92%89%E9%92%89%E8%BF%9C%E7%A8%8B%E6%89%93%E5%8D%A1/"/>
-    <id>http://yoursite.com/2018/07/15/免越狱钉钉远程打卡/</id>
+    <link href="https://eziochiu.github.io/2018/07/15/%E5%85%8D%E8%B6%8A%E7%8B%B1%E9%92%89%E9%92%89%E8%BF%9C%E7%A8%8B%E6%89%93%E5%8D%A1/"/>
+    <id>https://eziochiu.github.io/2018/07/15/免越狱钉钉远程打卡/</id>
     <published>2018-07-15T06:22:06.000Z</published>
     <updated>2019-02-22T13:53:02.925Z</updated>
     
@@ -59,14 +59,14 @@
     
     </summary>
     
-      <category term="工具教程" scheme="http://yoursite.com/categories/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
+      <category term="工具教程" scheme="https://eziochiu.github.io/categories/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/"/>
     
     
-      <category term="免越狱" scheme="http://yoursite.com/tags/%E5%85%8D%E8%B6%8A%E7%8B%B1/"/>
+      <category term="免越狱" scheme="https://eziochiu.github.io/tags/%E5%85%8D%E8%B6%8A%E7%8B%B1/"/>
     
-      <category term="钉钉远程打卡" scheme="http://yoursite.com/tags/%E9%92%89%E9%92%89%E8%BF%9C%E7%A8%8B%E6%89%93%E5%8D%A1/"/>
+      <category term="钉钉远程打卡" scheme="https://eziochiu.github.io/tags/%E9%92%89%E9%92%89%E8%BF%9C%E7%A8%8B%E6%89%93%E5%8D%A1/"/>
     
-      <category term="教程" scheme="http://yoursite.com/tags/%E6%95%99%E7%A8%8B/"/>
+      <category term="教程" scheme="https://eziochiu.github.io/tags/%E6%95%99%E7%A8%8B/"/>
     
   </entry>
   
