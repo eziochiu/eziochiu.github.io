@@ -142,7 +142,7 @@
   <meta name="keywords" content="Objective-C、Swift、Cocos2d-js、HTML5、React Native、JavaScript、PHP、Python、Java">
 <meta property="og:type" content="website">
 <meta property="og:title" content="eziochiu&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/tags/博客编写/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/教程/index.html">
 <meta property="og:site_name" content="eziochiu&#39;s Blog">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
@@ -155,7 +155,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/博客编写/">
+  <link rel="canonical" href="http://yoursite.com/tags/教程/">
 
 
 
@@ -165,7 +165,7 @@
   };
 </script>
 
-  <title>标签: 博客编写 | eziochiu's Blog</title>
+  <title>标签: 教程 | eziochiu's Blog</title>
   
 
 
@@ -400,7 +400,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h1>博客编写<small>标签</small>
+        <h1>教程<small>标签</small>
         </h1>
       </div>
 
@@ -412,17 +412,17 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2019/02/22/hexo-常用指令/" itemprop="url">
+            <a class="post-title-link" href="/2019/02/15/免越狱钉钉远程打卡/" itemprop="url">
               
-                <span itemprop="name">hexo 常用指令</span>
+                <span itemprop="name">免越狱钉钉远程打卡</span>
               
             </a>
         
       </h2>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-22T14:36:39+08:00" content="2019-02-22">
-          02-22
+        <time class="post-time" itemprop="dateCreated" datetime="2019-02-15T14:22:06+08:00" content="2019-02-15">
+          02-15
         </time>
       </div>
 
@@ -481,19 +481,17 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-count">2</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
 
               
-
-              
                 
                 
-                <div class="site-state-item site-state-tags">
-                  
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
                     
                     
                       
@@ -501,8 +499,31 @@
                       
                     
                     <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
                     <span class="site-state-item-name">标签</span>
-                  
+                  </a>
                 </div>
               
             </nav>
@@ -606,7 +627,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数"></span>
+    <span title="站点总字数">2k</span>
   
 
   
@@ -617,7 +638,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长"></span>
+    <span title="站点阅读时长">2 分钟</span>
   
 </div>
 
@@ -780,7 +801,7 @@
     var isfetched = false;
     var isXml = true;
     // Search DB path;
-    var search_path = "";
+    var search_path = "search.xml";
     if (search_path.length === 0) {
       search_path = "search.xml";
     } else if (/json$/i.test(search_path)) {
@@ -1102,75 +1123,6 @@
   
 
   
-  <script>
-    
-    function showTime(Counter) {
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      Counter('get', '/classes/Counter', { where: JSON.stringify({ url: { "$in": entries } }) })
-        .done(function ({ results }) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.url;
-            var time = item.time;
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function ({ responseJSON }) {
-          console.log("LeanCloud Counter Error: " + responseJSON.code + " " + responseJSON.error);
-        });
-    }
-    
-
-    $(function() {
-      $.get('https://app-router.leancloud.cn/2/route?appId=' + "ftmd6Qz8JIuEqadbKNDX62Sv-gzGzoHsz")
-        .done(function ({ api_server }) {
-          var Counter = function (method, url, data) {
-            return $.ajax({
-              method: method,
-              url: `https://${api_server}/1.1${url}`,
-              headers: {
-                'X-LC-Id': "ftmd6Qz8JIuEqadbKNDX62Sv-gzGzoHsz",
-                'X-LC-Key': "Bf55iVdUR8NPPHlSxEt30XbD",
-                'Content-Type': 'application/json',
-              },
-              data: data,
-            });
-          };
-          
-          if ($('.post-title-link').length >= 1) {
-            showTime(Counter);
-          }
-          
-        })
-    });
-  </script>
-
-
-
-  
 
   
 
@@ -1206,6 +1158,6 @@
   <script type="text/javascript" src="/js/src/custom.js"></script>
 
   <!-- 宠物 -->
-  
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":150,"height":300,"position":"right","hOffset":-30,"vOffset":-180},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2}});</script>
 </body>
 </html>
