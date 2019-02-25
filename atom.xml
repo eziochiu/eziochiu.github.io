@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://eziochiu.github.io/"/>
-  <updated>2019-02-22T09:00:50.444Z</updated>
+  <updated>2019-02-25T04:12:57.044Z</updated>
   <id>https://eziochiu.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>iOS Reveal2Loader修复版</title>
+    <link href="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88/"/>
+    <id>https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/</id>
+    <published>2019-02-25T03:59:00.000Z</published>
+    <updated>2019-02-25T04:12:57.044Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="越狱插件" scheme="https://eziochiu.github.io/categories/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
+    
+    
+      <category term="Reveal2Loader" scheme="https://eziochiu.github.io/tags/Reveal2Loader/"/>
+    
+      <category term="越狱插件" scheme="https://eziochiu.github.io/tags/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
+    
+  </entry>
   
   <entry>
     <title>hexo 常用指令</title>

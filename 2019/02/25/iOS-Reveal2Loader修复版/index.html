@@ -139,18 +139,21 @@
 
 
 
-  <meta name="description" content="123456hexo new &quot;postName&quot; #新建文章hexo generate #生成静态页面至public目录hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）hexo deploy #将.deploy目录部署到GitHubhexo help  # 查看帮助hexo version  #查看Hexo的版本">
-<meta name="keywords" content="hexo,命令">
+  <meta name="description" content="随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。">
+<meta name="keywords" content="Reveal2Loader,越狱插件">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hexo 常用指令">
-<meta property="og:url" content="https://eziochiu.github.io/2019/02/22/hexo-常用指令/index.html">
+<meta property="og:title" content="iOS Reveal2Loader修复版">
+<meta property="og:url" content="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/index.html">
 <meta property="og:site_name" content="eziochiu&#39;s Blog">
-<meta property="og:description" content="123456hexo new &quot;postName&quot; #新建文章hexo generate #生成静态页面至public目录hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）hexo deploy #将.deploy目录部署到GitHubhexo help  # 查看帮助hexo version  #查看Hexo的版本">
+<meta property="og:description" content="随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-22T09:00:50.444Z">
+<meta property="og:image" content="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/1.PNG">
+<meta property="og:image" content="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/2.PNG">
+<meta property="og:updated_time" content="2019-02-25T04:12:57.044Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="hexo 常用指令">
-<meta name="twitter:description" content="123456hexo new &quot;postName&quot; #新建文章hexo generate #生成静态页面至public目录hexo server #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server）hexo deploy #将.deploy目录部署到GitHubhexo help  # 查看帮助hexo version  #查看Hexo的版本">
+<meta name="twitter:title" content="iOS Reveal2Loader修复版">
+<meta name="twitter:description" content="随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。">
+<meta name="twitter:image" content="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/1.PNG">
 
 
 
@@ -159,7 +162,7 @@
 
 
 
-  <link rel="canonical" href="https://eziochiu.github.io/2019/02/22/hexo-常用指令/">
+  <link rel="canonical" href="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/">
 
 
 
@@ -169,7 +172,7 @@
   };
 </script>
 
-  <title>hexo 常用指令 | eziochiu's Blog</title>
+  <title>iOS Reveal2Loader修复版 | eziochiu's Blog</title>
   
 
 
@@ -382,7 +385,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://eziochiu.github.io/2019/02/22/hexo-常用指令/">
+    <link itemprop="mainEntityOfPage" href="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="eziochiu">
@@ -399,7 +402,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">hexo 常用指令
+          <h1 class="post-title" itemprop="name headline">iOS Reveal2Loader修复版
               
             
           </h1>
@@ -428,7 +431,7 @@
                 
               
 
-              <time title="创建时间：2019-02-22 14:36:39 / 修改时间：17:00:50" itemprop="dateCreated datePublished" datetime="2019-02-22T14:36:39+08:00">2019-02-22</time>
+              <time title="创建时间：2019-02-25 11:59:00 / 修改时间：12:12:57" itemprop="dateCreated datePublished" datetime="2019-02-25T11:59:00+08:00">2019-02-25</time>
             
 
             
@@ -450,7 +453,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/命令/" itemprop="url" rel="index"><span itemprop="name">命令</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/越狱插件/" itemprop="url" rel="index"><span itemprop="name">越狱插件</span></a></span>
 
                 
                 
@@ -478,7 +481,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">185</span>
+                <span title="本文字数">391</span>
               
 
               
@@ -512,8 +515,20 @@
       
 
       
-        <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hexo new <span class="string">"postName"</span> <span class="meta">#新建文章</span></span><br><span class="line">hexo generate <span class="meta">#生成静态页面至public目录</span></span><br><span class="line">hexo server <span class="meta">#开启预览访问端口（默认端口4000，'ctrl + c'关闭server）</span></span><br><span class="line">hexo deploy <span class="meta">#将.deploy目录部署到GitHub</span></span><br><span class="line">hexo help  <span class="meta"># 查看帮助</span></span><br><span class="line">hexo version  <span class="meta">#查看Hexo的版本</span></span><br></pre></td></tr></table></figure>
-
+        <p>随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。</p>
+<a id="more"></a>
+<p>具体修改过程就不说了，<a href="https://github.com/eziochiu/Reveal2Loader-Fixed-or-iOS12" target="_blank" rel="noopener">修改后的源码</a>,<a href="https://github.com/zidaneno5/Reveal2Loader" target="_blank" rel="noopener">作者源码</a></p>
+<p>#打包即即安装方法</p>
+<p>1、cd 到工程目录 执行下列语句</p>
+<blockquote>
+<p>sudo dpkg-deb -b Package reveal2Loader.deb (前提是必须安装dpkg，可以用brew安装也可以用macport安装)</p>
+</blockquote>
+<p>然后会在目录下生成reveal2Loader.deb</p>
+<p>2、将reveal2Loader.deb拷贝到手机</p>
+<p>3、将原来的reveal2Loader插件卸载，注销SpringBoard</p>
+<p>4、直接用filza找到该文件进行安装</p>
+<p>enjoy！！！</p>
+<div style="width: 1024px; margin: auto"><img src="/2019/02/25/iOS-Reveal2Loader修复版/1.PNG" alt="样例"></div><br><div style="width: 1024px; margin: auto"><img src="/2019/02/25/iOS-Reveal2Loader修复版/2.PNG" alt="样例"></div>
       
     </div>
 
@@ -526,38 +541,6 @@
     <div>
       
         
-<div class="my_post_copyright">
-  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
-  <!-- JS库 sweetalert 可修改路径 -->
-  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
-  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
-  <p><span>本文标题:</span><a href="/2019/02/22/hexo-常用指令/">hexo 常用指令</a></p>
-  <p><span>文章作者:</span><a href="/" title="访问 eziochiu 的个人博客">eziochiu</a></p>
-  <p><span>发布时间:</span>2019年02月22日 - 14:02</p>
-  
-    <p><span>最后更新:</span>2019年02月22日 - 17:02</p>
-  
-  <p><span>原始链接:</span><a href="/2019/02/22/hexo-常用指令/" title="hexo 常用指令">https://eziochiu.github.io/2019/02/22/hexo-常用指令/</a>
-    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://eziochiu.github.io/2019/02/22/hexo-常用指令/" aria-label="复制成功！"></i></span>
-  </p>
-  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)"> CC BY-NC-SA 4.0 Unported</a> 转载请保留原文链接及作者。</p>
-</div>
-<script>
-    var clipboard = new Clipboard('.fa-clipboard');
-    clipboard.on('success', $(function(){
-      $(".fa-clipboard").click(function(){
-        swal({
-          title: "",
-          text: '复制成功',
-          html: false,
-          timer: 500,
-          showConfirmButton: false
-        });
-      });
-    }));
-</script>
-
       
     </div>
 
@@ -600,9 +583,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/hexo/" rel="tag"><i class="fa fa-tag"></i> hexo</a>
+            <a href="/tags/Reveal2Loader/" rel="tag"><i class="fa fa-tag"></i> Reveal2Loader</a>
           
-            <a href="/tags/命令/" rel="tag"><i class="fa fa-tag"></i> 命令</a>
+            <a href="/tags/越狱插件/" rel="tag"><i class="fa fa-tag"></i> 越狱插件</a>
           
         </div>
       
@@ -615,8 +598,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/15/免越狱钉钉远程打卡/" rel="next" title="免越狱钉钉远程打卡">
-                <i class="fa fa-chevron-left"></i> 免越狱钉钉远程打卡
+              <a href="/2019/02/22/hexo-常用指令/" rel="next" title="hexo 常用指令">
+                <i class="fa fa-chevron-left"></i> hexo 常用指令
               </a>
             
           </div>
@@ -624,10 +607,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/02/25/iOS-Reveal2Loader修复版/" rel="prev" title="iOS Reveal2Loader修复版">
-                iOS Reveal2Loader修复版 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -1028,7 +1007,7 @@
   
     <script type="text/javascript">
       window.livereOptions = {
-        refer: '2019/02/22/hexo-常用指令/'
+        refer: '2019/02/25/iOS-Reveal2Loader修复版/'
       };
       (function(d, s) {
         var j, e = d.getElementsByTagName(s)[0];
