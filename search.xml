@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[iOS Reveal2Loader修复版]]></title>
     <url>%2F2019%2F02%2F25%2FiOS-Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88%2F</url>
-    <content type="text"><![CDATA[随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。 具体修改过程就不说了，修改后的源码,作者源码 #打包即即安装方法 1、cd 到工程目录 执行下列语句 sudo dpkg-deb -b Package reveal2Loader.deb (前提是必须安装dpkg，可以用brew安装也可以用macport安装) 然后会在目录下生成reveal2Loader.deb 2、将reveal2Loader.deb拷贝到手机 3、将原来的reveal2Loader插件卸载，注销SpringBoard 4、直接用filza找到该文件进行安装 enjoy！！！]]></content>
+    <content type="text"><![CDATA[随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。 具体修改过程就不说了，修改后的源码,作者源码 #打包即即安装方法 1、cd 到工程目录 执行下列语句 sudo dpkg-deb -b Package reveal2Loader.deb (前提是必须安装dpkg，可以用brew安装也可以用macport安装) 然后会在目录下生成reveal2Loader.deb 2、将reveal2Loader.deb拷贝到手机 3、将原来的reveal2Loader插件卸载，注销SpringBoard 4、直接用filza找到该文件进行安装，或者你也可以直接在bigBoss上搜索Reveal2Loader for iOS12进行安装，前提是卸载之前的旧版本，否则会报错。 enjoy！！！]]></content>
       <categories>
         <category>越狱插件</category>
       </categories>
