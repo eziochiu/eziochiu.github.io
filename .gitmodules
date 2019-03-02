@@ -1,0 +1,15 @@
+[submodule "themes/Next2/source/lib/algolia-instant-search"]
+	path = themes/Next2/source/lib/algolia-instant-search
+	url = ../../theme-next/theme-next-algolia-instant-search
+[submodule "themes/Next2/source/lib/canvas-nest"]
+	path = themes/Next2/source/lib/canvas-nest
+	url = ../../theme-next/theme-next-canvas-nest
+[submodule "themes/Next2/source/lib/fancybox"]
+	path = themes/Next2/source/lib/fancybox
+	url = ../../theme-next/theme-next-fancybox3
+[submodule "themes/Next2/source/lib/reading_progress"]
+	path = themes/Next2/source/lib/reading_progress
+	url = ../../theme-next/theme-next-reading-progress
+[submodule "themes/Next2/source/lib/three"]
+	path = themes/Next2/source/lib/three
+	url = ../../theme-next/theme-next-three
