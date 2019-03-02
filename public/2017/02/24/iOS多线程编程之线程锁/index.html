@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+<script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+<link href="//cdn.bootcss.com/pace/1.0.2/themes/pink/pace-theme-flash.css" rel="stylesheet">
+
+<style>
+    .pace .pace-progress {
+        background: #1E92FB; /*进度条颜色*/
+        height: 3px;
+    }
+    .pace .pace-progress-inner {
+         box-shadow: 0 0 10px #1E92FB, 0 0 5px     #1E92FB; /*阴影颜色*/
+    }
+    .pace .pace-activity {
+        border-top-color: #1E92FB;    /*上边框颜色*/
+        border-left-color: #1E92FB;    /*左边框颜色*/
+    }
+</style>
+
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索文章","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="何所谓线程安全线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。 在iOS开发中常用的加锁方式有以下几种：">
+<meta name="keywords" content="多线程,iOS线程锁">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS多线程编程之线程锁">
+<meta property="og:url" content="https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/index.html">
+<meta property="og:site_name" content="eziochiu&#39;s Blog">
+<meta property="og:description" content="何所谓线程安全线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。 在iOS开发中常用的加锁方式有以下几种：">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-24T10:09:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS多线程编程之线程锁">
+<meta name="twitter:description" content="何所谓线程安全线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。 在iOS开发中常用的加锁方式有以下几种：">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="eziochiu's Blog" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>iOS多线程编程之线程锁 | eziochiu's Blog</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-93918217-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-93918217-1');
+</script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">eziochiu's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">一个会逆向的iOS工程师</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>时间线</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+    <a href="/404.html" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>公益 404</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="eziochiu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eziochiu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS多线程编程之线程锁
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              
+              
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-02-24 18:04:15" itemprop="dateCreated datePublished" datetime="2017-02-24T18:04:15+08:00">2017-02-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+
+                
+                  <time title="修改时间：2019-02-24 18:09:41" itemprop="dateModified" datetime="2019-02-24T18:09:41+08:00">2019-02-24</time>
+                
+
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/多线程/" itemprop="url" rel="index"><span itemprop="name">多线程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">12k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="何所谓线程安全"><a href="#何所谓线程安全" class="headerlink" title="何所谓线程安全"></a>何所谓线程安全</h1><p>线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。</p>
+<p>在iOS开发中常用的加锁方式有以下几种：</p>
+<a id="more"></a>
+<h1 id="NSLock"><a href="#NSLock" class="headerlink" title="NSLock"></a>NSLock</h1><p>在iOS程序中NSLock中实现了一个简单的互斥锁，实现了NSLocking协议，</p>
+<p>lock为加锁，</p>
+<p>unlock为解锁，</p>
+<p>tryLock为尝试加锁，如果加锁失败则不会阻塞线程，只会立即回调，需要注意的是，使用tryLock并不能加锁成功 ，如果获取锁失败，则不会执行加锁。</p>
+<p>NOLockBforeDate:在指定的date之前暂时阻塞线程（如果没有获取锁），如果在指定的时间仍然没有获取到🔐的话。线程会被立即唤醒，函数立即返回NO。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    __weak typeof(self) weakSelf = self;</span><br><span class="line">    dispatch_group_t group = dispatch_group_create();</span><br><span class="line">    dispatch_queue_t queueA = dispatch_queue_create(&quot;queueA&quot;, nil);</span><br><span class="line">    dispatch_queue_t queueB = dispatch_queue_create(&quot;queueB&quot;, nil);</span><br><span class="line">    dispatch_group_async(group, queueA, ^&#123;</span><br><span class="line">        [weakSelf getWithArray:weakSelf.array];</span><br><span class="line">        NSLog(@&quot;%@线程A&quot;,weakSelf.array);</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_group_async(group, queueB, ^&#123;</span><br><span class="line">        [weakSelf getWithArray:weakSelf.array];</span><br><span class="line">        NSLog(@&quot;%@线程B&quot;,weakSelf.array);</span><br><span class="line">    &#125;);</span><br><span class="line">    NSLog(@&quot;%@主线程&quot;,weakSelf.array);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)getWithArray:(NSMutableArray *)array &#123;</span><br><span class="line">    [self.lock lock];</span><br><span class="line">    if (array.count &gt; 0) &#123;</span><br><span class="line">        NSLog(@&quot;%@...objc&quot;,array.lastObject);</span><br><span class="line">        [array removeLastObject];</span><br><span class="line">    &#125;</span><br><span class="line">    [self.lock unlock];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不加锁的打印：可看出线程A和线程B同时操作了getWithArray:(NSMutableArray *)array，由于资源抢占，导致了数组越界而崩溃</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">2016-07-22 22:18:55.695827+0800 ThreadLock[10764:315922] 4444...objc</span><br><span class="line">2016-07-22 22:18:55.695827+0800 ThreadLock[10764:315923] 4444...objc</span><br><span class="line">2016-07-22 22:18:55.695892+0800 ThreadLock[10764:315824] (</span><br><span class="line">    1111,</span><br><span class="line">    2222,</span><br><span class="line">    3333,</span><br><span class="line">    4444</span><br><span class="line">)主线程</span><br><span class="line">2016-07-22 22:18:55.696036+0800 ThreadLock[10764:315922] (</span><br><span class="line">    1111,</span><br><span class="line">    2222,</span><br><span class="line">    3333</span><br><span class="line">)线程A</span><br><span class="line">2016-07-22 22:18:55.697056+0800 ThreadLock[10764:315923] *** Terminating app due to uncaught exception &apos;NSRangeException&apos;, reason: &apos;*** -[__NSArrayM removeObjectsInRange:]: range &#123;3, 1&#125; extends beyond bounds [0 .. 2]&apos;</span><br></pre></td></tr></table></figure>
+<p>加锁打印：加锁后，线程A先跑，跑的过程中由于线程加锁，线程B无法访问getWithArray:(NSMutableArray *)array，线程A结束之后，线程B发现array中只剩下3个元素，所以把最后一个元素3333给remove掉了，从而达到了线程运行的安全。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">2016-07-22 22:10:40.114063+0800 ThreadLock[10425:305487] 4444...objc</span><br><span class="line">2016-07-22 22:10:40.113988+0800 ThreadLock[10425:305421] (</span><br><span class="line">    1111,</span><br><span class="line">    2222,</span><br><span class="line">    3333,</span><br><span class="line">    4444</span><br><span class="line">)主线程</span><br><span class="line">2016-07-22 22:10:40.117108+0800 ThreadLock[10425:305487] (</span><br><span class="line">    1111,</span><br><span class="line">    2222,</span><br><span class="line">    3333</span><br><span class="line">)线程A</span><br><span class="line">2016-07-22 22:10:40.117076+0800 ThreadLock[10425:305486] 3333...objc</span><br><span class="line">2016-07-22 22:10:40.117703+0800 ThreadLock[10425:305486] (</span><br><span class="line">    1111,</span><br><span class="line">    2222</span><br><span class="line">)线程B</span><br></pre></td></tr></table></figure>
+<h1 id="synchronized"><a href="#synchronized" class="headerlink" title="@synchronized"></a>@synchronized</h1><p>@synchronized在早期接触的iOS开发中经常接触，尤其是在创建单利模式的时候。</p>
+<p>代码以及打印如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)getWithArray:(NSMutableArray *)array &#123;</span><br><span class="line">    @synchronized (self) &#123;</span><br><span class="line">        if (array.count &gt; 0) &#123;</span><br><span class="line">            NSLog(@&quot;%@...objc&quot;,array.lastObject);</span><br><span class="line">            [array removeLastObject];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">2016-07-22 22:20:33.083045+0800 ThreadLock[10837:317900] 4444...objc</span><br><span class="line">2016-07-22 22:20:33.083278+0800 ThreadLock[10837:317693] (</span><br><span class="line">    1111,</span><br><span class="line">    2222,</span><br><span class="line">    3333,</span><br><span class="line">    4444</span><br><span class="line">)主线程</span><br><span class="line">2016-07-22 22:20:33.083437+0800 ThreadLock[10837:317900] (</span><br><span class="line">    1111,</span><br><span class="line">    2222,</span><br><span class="line">    3333</span><br><span class="line">)线程A</span><br><span class="line">2016-07-22 22:20:33.083438+0800 ThreadLock[10837:317899] 3333...objc</span><br><span class="line">2016-07-22 22:20:33.083814+0800 ThreadLock[10837:317899] (</span><br><span class="line">    1111,</span><br><span class="line">    2222</span><br><span class="line">)线程B</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="条件信号量dispatch-semaphore-t"><a href="#条件信号量dispatch-semaphore-t" class="headerlink" title="条件信号量dispatch_semaphore_t"></a>条件信号量dispatch_semaphore_t</h1><p>条件信号量详细用法见上一遍，GCD的用法</p>
+<hr>
+<h1 id="dispatch-barrier-async-dispatch-barrier-sync"><a href="#dispatch-barrier-async-dispatch-barrier-sync" class="headerlink" title="dispatch_barrier_async/dispatch_barrier_sync"></a>dispatch_barrier_async/dispatch_barrier_sync</h1><p>详细用法见上一遍，GCD的用法，但有一点值得注意的是：</p>
+<blockquote>
+<p>如果在当前线程调用dispatch_barrier_sync阻塞线程会发生死锁</p>
+</blockquote>
+<hr>
+<h1 id="NSCondition"><a href="#NSCondition" class="headerlink" title="NSCondition"></a>NSCondition</h1><p>NSCondition同样实现了NSLocking协议，所以它和NSLock一样，也有NSLocking协议的lock和unlock方法，可以当做NSLock来使用解决线程同步问题，用法完全一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- (void)getWithArray:(NSMutableArray *)array &#123;</span><br><span class="line">    [self.lock lock];</span><br><span class="line">    if (array.count &gt; 0) &#123;</span><br><span class="line">        NSLog(@&quot;%@...objc&quot;,array.lastObject);</span><br><span class="line">        [array removeLastObject];</span><br><span class="line">    &#125;</span><br><span class="line">    [self.lock unlock];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同时，NSCondition提供更高级的用法。wait和signal，和条件信号量类似。</p>
+<p>比如我们要监听imageNames数组的个数，当imageNames的个数大于0的时候就执行清空操作。思路是这样的，当imageNames个数大于0时执行清空操作，否则，wait等待执行清空操作。当imageNames个数增加的时候发生signal信号，让等待的线程唤醒继续执行。</p>
+<p>NSCondition和NSLock、@synchronized等是不同的是，NSCondition可以给每个线程分别加锁，加锁后不影响其他线程进入临界区。这是非常强大。但是正是因为这种分别加锁的方式，NSCondition使用wait并使用加锁后并不能真正的解决资源的竞争。比如我们有个需求：不能让m&lt;0。假设当前m=0,线程A要判断到m&gt;0为假,执行等待；线程B执行了m=1操作，并唤醒线程A执行m-1操作的同时线程C判断到m&gt;0，因为他们在不同的线程锁里面，同样判断为真也执行了m-1，这个时候线程A和线程C都会执行m-1,但是m=1，结果就会造成m=-1.</p>
+<p>当我用数组做删除试验时，做增删操作并不是每次都会出现，大概3-4次后会出现。单纯的使用lock、unlock是没有问题的。</p>
+<hr>
+<h1 id="条件锁NSConditionLock"><a href="#条件锁NSConditionLock" class="headerlink" title="条件锁NSConditionLock"></a>条件锁NSConditionLock</h1><p>也有人说这是个互斥锁。NSConditionLock同样实现了NSLocking协议，试验过程中发现性能很低。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)getIamgeName:(NSMutableArray *)imageNames&#123;</span><br><span class="line">    NSString *imageName;</span><br><span class="line">    [lock lock];</span><br><span class="line">    if (imageNames.count&gt;0) &#123;</span><br><span class="line">        imageName = [imageNames lastObject];</span><br><span class="line">        [imageNames removeObject:imageName];</span><br><span class="line">    &#125;</span><br><span class="line">    [lock unlock];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>NSConditionLock也可以像NSCondition一样做多线程之间的任务等待调用，而且是线程安全的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">- (void)getIamgeName:(NSMutableArray *)imageNames&#123;</span><br><span class="line">    NSString *imageName;</span><br><span class="line">    [lock lockWhenCondition:1];    //加锁</span><br><span class="line">    if (imageNames.count&gt;0) &#123;</span><br><span class="line">        imageName = [imageNames lastObject];</span><br><span class="line">        [imageNames removeObjectAtIndex:0];</span><br><span class="line">    &#125;</span><br><span class="line">    [lock unlockWithCondition:0];     //解锁</span><br><span class="line">&#125;</span><br><span class="line">- (void)createImageName:(NSMutableArray *)imageNames&#123;</span><br><span class="line">    [lock lockWhenCondition:0];</span><br><span class="line">    [imageNames addObject:@&quot;0&quot;];</span><br><span class="line">    [lock unlockWithCondition:1];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#pragma mark - 多线程取出图片后删除</span><br><span class="line">- (void)getImageNameWithMultiThread&#123;</span><br><span class="line">    NSMutableArray *imageNames = [[NSMutableArray alloc]init];</span><br><span class="line">    dispatch_group_t dispatchGroup = dispatch_group_create();</span><br><span class="line">    __block double then, now;</span><br><span class="line">    then = CFAbsoluteTimeGetCurrent();</span><br><span class="line">    for (int i=0; i&lt;10000; i++) &#123;</span><br><span class="line">        dispatch_group_async(dispatchGroup, self.synchronizationQueue, ^()&#123;</span><br><span class="line">            [self getIamgeName:imageNames];</span><br><span class="line">        &#125;);</span><br><span class="line">        dispatch_group_async(dispatchGroup, self.synchronizationQueue, ^()&#123;</span><br><span class="line">            [self createImageName:imageNames];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_group_notify(dispatchGroup, self.synchronizationQueue, ^()&#123;</span><br><span class="line">        now = CFAbsoluteTimeGetCurrent();</span><br><span class="line">        printf(&quot;thread_lock: %f sec\nimageNames count: %ld\n&quot;, now-then,imageNames.count);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="递归锁NSRecursiveLock"><a href="#递归锁NSRecursiveLock" class="headerlink" title="递归锁NSRecursiveLock"></a>递归锁NSRecursiveLock</h1><p>有时候“加锁代码”中存在递归调用，<strong>递归开始前加锁，递归调用开始后会重复执行此方法以至于反复执行加锁代码最终造成死锁，这个时候可以使用递归锁来解决。使用递归锁可以在一个线程中反复获取锁而不造成死锁，这个过程中会记录获取锁和释放锁的次数，只有最后两者平衡锁才被最终释放。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">- (void)getIamgeName:(NSMutableArray *)imageNames&#123;</span><br><span class="line">    NSString *imageName;</span><br><span class="line">    [lock lock];</span><br><span class="line">    if (imageNames.count&gt;0) &#123;</span><br><span class="line">        imageName = [imageNames firstObject];</span><br><span class="line">        [imageNames removeObjectAtIndex:0];</span><br><span class="line">        [self getIamgeName:imageNames];</span><br><span class="line">    &#125;</span><br><span class="line">    [lock unlock];</span><br><span class="line">&#125;</span><br><span class="line">- (void)getImageNameWithMultiThread&#123;</span><br><span class="line">    NSMutableArray *imageNames = [NSMutableArray new];</span><br><span class="line">    int count = 1024*10;</span><br><span class="line">    for (int i=0; i&lt;count; i++) &#123;</span><br><span class="line">        [imageNames addObject:[NSString stringWithFormat:@&quot;%d&quot;,i]];</span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_group_t dispatchGroup = dispatch_group_create();</span><br><span class="line">    __block double then, now;</span><br><span class="line">    then = CFAbsoluteTimeGetCurrent();</span><br><span class="line">    dispatch_group_async(dispatchGroup, self.synchronizationQueue, ^()&#123;</span><br><span class="line">        [self getIamgeName:imageNames];</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_group_notify(dispatchGroup, dispatch_get_main_queue(), ^()&#123;</span><br><span class="line">        now = CFAbsoluteTimeGetCurrent();</span><br><span class="line">        printf(&quot;thread_lock: %f sec\nimageNames count: %ld\n&quot;, now-then,imageNames.count);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="NSDistributedLock"><a href="#NSDistributedLock" class="headerlink" title="NSDistributedLock"></a>NSDistributedLock</h1><p>NSDistributedLock是MAC开发中的跨进程的分布式锁，底层是用文件系统实现的互斥锁。NSDistributedLock没有实现NSLocking协议，所以没有lock方法，取而代之的是非阻塞的tryLock方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSDistributedLock *lock = [[NSDistributedLock alloc] initWithPath:@&quot;/Users/mac/Desktop/lock.lock&quot;];</span><br><span class="line">    while (![lock tryLock])</span><br><span class="line">    &#123;</span><br><span class="line">        sleep(1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //do something</span><br><span class="line">    [lock unlock];</span><br></pre></td></tr></table></figure>
+<p>当执行到do something时程序退出,程序再次启动之后tryLock就再也不能成功了,陷入死锁状态.其他应用也不能访问受保护的共享资源。在这种情况下，你可以使用breadLock方法来打破现存的锁以便你可以获取它。但是通常应该避免打破锁，除非你确定拥有进程已经死亡并不可能再释放该锁。</p>
+<p>因为是MAC下的线程锁，所以demo里面没有，这里也不做过多关注。</p>
+<hr>
+<h1 id="互斥锁POSIX"><a href="#互斥锁POSIX" class="headerlink" title="互斥锁POSIX"></a>互斥锁POSIX</h1><p>POSIX和dispatch_semaphore_t很像，但是完全不同。POSIX是Unix/Linux平台上提供的一套条件互斥锁的API。</p>
+<p>新建一个简单的POSIX互斥锁，引入头文件<code>#import &lt;pthread.h&gt;</code>声明并初始化一个pthread_mutex_t的结构。使用pthread_mutex_lock和pthread_mutex_unlock函数。调用pthread_mutex_destroy来释放该锁的数据结构。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;pthread.h&gt;</span><br><span class="line">@interface MYPOSIXViewController ()</span><br><span class="line">&#123;</span><br><span class="line">    pthread_mutex_t mutex;  //声明pthread_mutex_t的结构</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation MYPOSIXViewController</span><br><span class="line">- (void)dealloc&#123;</span><br><span class="line">    pthread_mutex_destroy(&amp;mutex);  //释放该锁的数据结构</span><br><span class="line">&#125;</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view.</span><br><span class="line">    pthread_mutex_init(&amp;mutex, NULL);</span><br><span class="line">    /**</span><br><span class="line">     *  初始化</span><br><span class="line">     *</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)getIamgeName:(NSMutableArray *)imageNames&#123;</span><br><span class="line">    NSString *imageName;</span><br><span class="line">    /**</span><br><span class="line">     *  加锁</span><br><span class="line">     */</span><br><span class="line">    pthread_mutex_lock(&amp;mutex);</span><br><span class="line">    if (imageNames.count&gt;0) &#123;</span><br><span class="line">        imageName = [imageNames firstObject];</span><br><span class="line">        [imageNames removeObjectAtIndex:0];</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     *  解锁</span><br><span class="line">     */</span><br><span class="line">    pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>POSIX还可以创建条件锁，提供了和NSCondition一样的条件控制，初始化互斥锁同时使用pthread_cond_init来初始化条件数据结构，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 初始化</span><br><span class="line">    int pthread_cond_init (pthread_cond_t *cond, pthread_condattr_t *attr);</span><br><span class="line"></span><br><span class="line">    // 等待（会阻塞）</span><br><span class="line">    int pthread_cond_wait (pthread_cond_t *cond, pthread_mutex_t *mut);</span><br><span class="line"></span><br><span class="line">    // 定时等待</span><br><span class="line">    int pthread_cond_timedwait (pthread_cond_t *cond, pthread_mutex_t *mut, const struct timespec *abstime);</span><br><span class="line"></span><br><span class="line">    // 唤醒</span><br><span class="line">    int pthread_cond_signal (pthread_cond_t *cond);</span><br><span class="line"></span><br><span class="line">    // 广播唤醒</span><br><span class="line">    int pthread_cond_broadcast (pthread_cond_t *cond);</span><br><span class="line"></span><br><span class="line">    // 销毁</span><br><span class="line">    int pthread_cond_destroy (pthread_cond_t *cond);</span><br></pre></td></tr></table></figure>
+<p>POSIX还提供了很多函数，有一套完整的API，包含Pthreads线程的创建控制等等，非常底层，可以手动处理线程的各个状态的转换即管理生命周期，甚至可以实现一套自己的多线程，感兴趣的可以继续深入了解。推荐一篇详细文章，但不是基于iOS的，是基于Linux的，但是介绍的非常详细 <a href="http://blog.chinaunix.net/uid-26885237-id-3207962.html" target="_blank" rel="noopener">Linux 线程锁详解</a></p>
+<hr>
+<h1 id="自旋锁OSSpinLock"><a href="#自旋锁OSSpinLock" class="headerlink" title="自旋锁OSSpinLock"></a>自旋锁OSSpinLock</h1><p>首先要提的是OSSpinLock已经出现了BUG，导致并不能完全保证是线程安全的。</p>
+<blockquote>
+<p>新版 iOS 中，系统维护了 5 个不同的线程优先级/QoS: background，utility，default，user-initiated，user-interactive。高优先级线程始终会在低优先级线程前执行，一个线程不会受到比它更低优先级线程的干扰。这种线程调度算法会产生潜在的优先级反转问题，从而破坏了 spin lock。</p>
+<p>具体来说，如果一个低优先级的线程获得锁并访问共享资源，这时一个高优先级的线程也尝试获得这个锁，它会处于 spin lock 的忙等状态从而占用大量 CPU。此时低优先级线程无法与高优先级线程争夺 CPU 时间，从而导致任务迟迟完不成、无法释放 lock。这并不只是理论上的问题，libobjc 已经遇到了很多次这个问题了，于是苹果的工程师停用了 OSSpinLock。</p>
+</blockquote>
+<blockquote>
+<p>苹果工程师 Greg Parker 提到，对于这个问题，一种解决方案是用 truly unbounded backoff 算法，这能避免 livelock 问题，但如果系统负载高时，它仍有可能将高优先级的线程阻塞数十秒之久；另一种方案是使用 handoff lock 算法，这也是 libobjc 目前正在使用的。锁的持有者会把线程 ID 保存到锁内部，锁的等待者会临时贡献出它的优先级来避免优先级反转的问题。理论上这种模式会在比较复杂的多锁条件下产生问题，但实践上目前还一切都好。</p>
+</blockquote>
+<blockquote>
+<p>OSSpinLock 自旋锁，性能最高的锁。原理很简单，就是一直 do while 忙等。它的缺点是当等待时会消耗大量 CPU 资源，所以它不适用于较长时间的任务。对于内存缓存的存取来说，它非常合适。</p>
+<p>-摘自<a href="http://blog.ibireme.com/author/ibireme/" target="_blank" rel="noopener">ibireme</a></p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;libkern/OSAtomic.h&gt;</span><br><span class="line"></span><br><span class="line">#import &lt;libkern/OSAtomic.h&gt;</span><br><span class="line">@interface MYOSSpinLockViewController ()</span><br><span class="line">&#123;</span><br><span class="line">    OSSpinLock spinlock;  //声明pthread_mutex_t的结构</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation MYOSSpinLockViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view.</span><br><span class="line">    spinlock = OS_SPINLOCK_INIT;</span><br><span class="line">    /**</span><br><span class="line">     *  初始化</span><br><span class="line">     *</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)getIamgeName:(NSMutableArray *)imageNames&#123;</span><br><span class="line">    NSString *imageName;</span><br><span class="line">    /**</span><br><span class="line">     *  加锁</span><br><span class="line">     */</span><br><span class="line">    OSSpinLockLock(&amp;spinlock);</span><br><span class="line">    if (imageNames.count&gt;0) &#123;</span><br><span class="line">        imageName = [imageNames firstObject];</span><br><span class="line">        [imageNames removeObjectAtIndex:0];</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     *  解锁</span><br><span class="line">     */</span><br><span class="line">    OSSpinLockUnlock(&amp;spinlock);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>@synchronized：适用线程不多，任务量不大的多线程加锁；</strong></p>
+<p><strong>NSLock：其实NSLock并没有想象中的那么差，不知道大家为什么不推荐使用；</strong></p>
+<p><strong>dispatch_semaphore_t：使用信号来做加锁，性能提升显著；</strong></p>
+<p><strong>NSCondition：使用其做多线程之间的通信调用不是线程安全的；</strong></p>
+<p><strong>NSConditionLock：单纯加锁性能非常低，比NSLock低很多，但是可以用来做多线程处理不同任务的通信调用；</strong></p>
+<p><strong>NSRecursiveLock：递归锁的性能出奇的高，但是只能作为递归使用,所以限制了使用场景；</strong></p>
+<p><strong>NSDistributedLock：因为是MAC开发的，就不讨论了；</strong></p>
+<p><strong>POSIX(pthread_mutex)：底层的api，复杂的多线程处理建议使用，并且可以封装自己的多线程；</strong></p>
+<p><strong>OSSpinLock：性能也非常高，可惜出现了线程问题；</strong></p>
+<p><strong>dispatch_barrier_async/dispatch_barrier_sync：测试中发现dispatch_barrier_sync比dispatch_barrier_async性能要高，真是大出意外。</strong></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        
+<div class="my_post_copyright">
+  <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+  <!-- JS库 sweetalert 可修改路径 -->
+  <script type="text/javascript" src="http://jslibs.wuxubj.cn/sweetalert_mini/jquery-1.7.1.min.js"></script>
+  <script src="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://jslibs.wuxubj.cn/sweetalert_mini/sweetalert.mini.css">
+  <p><span>本文标题:</span><a href="/2017/02/24/iOS多线程编程之线程锁/">iOS多线程编程之线程锁</a></p>
+  <p><span>文章作者:</span><a href="/" title="访问 eziochiu 的个人博客">eziochiu</a></p>
+  <p><span>发布时间:</span>2017年02月24日 - 18:02</p>
+  
+    <p><span>最后更新:</span>2019年02月24日 - 18:02</p>
+  
+  <p><span>原始链接:</span><a href="/2017/02/24/iOS多线程编程之线程锁/" title="iOS多线程编程之线程锁">https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/</a>
+    <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/" aria-label="复制成功！"></i></span>
+  </p>
+  <p><span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)"> CC BY-NC-SA 4.0 Unported</a> 转载请保留原文链接及作者。</p>
+</div>
+<script>
+    var clipboard = new Clipboard('.fa-clipboard');
+    clipboard.on('success', $(function(){
+      $(".fa-clipboard").click(function(){
+        swal({
+          title: "",
+          text: '复制成功',
+          html: false,
+          timer: 500,
+          showConfirmButton: false
+        });
+      });
+    }));
+</script>
+
+      
+    </div>
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>对你有帮助？您的支持将更加鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.png" alt="eziochiu 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.png" alt="eziochiu 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多线程/" rel="tag"><i class="fa fa-tag"></i> 多线程</a>
+          
+            <a href="/tags/iOS线程锁/" rel="tag"><i class="fa fa-tag"></i> iOS线程锁</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/11/Notification与多线程/" rel="prev" title="Notification与多线程">
+                Notification与多线程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80Mjc5My8xOTM0MA=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/head.png" alt="eziochiu">
+            
+              <p class="site-author-name" itemprop="name">eziochiu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/eziochiu" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/e0mher" target="_blank" title="Twitter"><i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://wpa.qq.com/msgrd?v=3&uin=394761797&site=qq&menu=yes" target="_blank" title="QQ"><i class="fa fa-fw fa-qq"></i>QQ</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友情链接
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://boxueio.com" title="泊学网" target="_blank">泊学网</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.smartisan.com/" title="锤子科技" target="_blank">锤子科技</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://objccn.io/" title="ObjC中国" target="_blank">ObjC中国</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://github.com/apple/swift-evolution" title="Swift evolution" target="_blank">Swift evolution</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#何所谓线程安全"><span class="nav-number">1.</span> <span class="nav-text">何所谓线程安全</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSLock"><span class="nav-number">2.</span> <span class="nav-text">NSLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized"><span class="nav-number">3.</span> <span class="nav-text">@synchronized</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件信号量dispatch-semaphore-t"><span class="nav-number">4.</span> <span class="nav-text">条件信号量dispatch_semaphore_t</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch-barrier-async-dispatch-barrier-sync"><span class="nav-number">5.</span> <span class="nav-text">dispatch_barrier_async/dispatch_barrier_sync</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSCondition"><span class="nav-number">6.</span> <span class="nav-text">NSCondition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件锁NSConditionLock"><span class="nav-number">7.</span> <span class="nav-text">条件锁NSConditionLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#递归锁NSRecursiveLock"><span class="nav-number">8.</span> <span class="nav-text">递归锁NSRecursiveLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSDistributedLock"><span class="nav-number">9.</span> <span class="nav-text">NSDistributedLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#互斥锁POSIX"><span class="nav-number">10.</span> <span class="nav-text">互斥锁POSIX</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自旋锁OSSpinLock"><span class="nav-number">11.</span> <span class="nav-text">自旋锁OSSpinLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">12.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2013 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">eziochiu</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点总字数：</span>
+    
+    <span title="站点总字数">57k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    
+    <span title="站点阅读时长">52 分钟</span>
+  
+</div>
+
+
+
+
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <div class="powered-by">
+      <i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+      本站访客数:<span id="busuanzi_value_site_uv"></span>
+    </span>
+  </div>
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 从❤️出发 </div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Mist</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+    <script type="text/javascript">
+      window.livereOptions = {
+        refer: '2017/02/24/iOS多线程编程之线程锁/'
+      };
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+      <!-- 页面点击小红心 -->
+      <script type="text/javascript" src="/js/src/love.js"></script>
+  
+
+  <!-- 代码块复制功能 -->
+  <script type="text/javascript" src="/js/src/clipboard.min.js"></script>
+  <script type="text/javascript" src="/js/src/copy_code.js"></script>
+
+  <!-- github 链接 -->
+  <a target="_blank" href="https://github.com/eziochiu" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#FD6C6C; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+  <!-- 自定义 JS -->
+  <script type="text/javascript" src="/js/src/custom.js"></script>
+
+  <!-- 宠物 -->
+  <script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"log":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":150,"height":300,"position":"right","hOffset":-30,"vOffset":-180},"mobile":{"show":false,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2}});</script>
+</body>
+</html>
