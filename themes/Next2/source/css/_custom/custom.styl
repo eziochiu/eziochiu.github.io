@@ -1,0 +1,141 @@
+// Custom styles.
+// 主页文章添加阴影效果
+ .page-home .post {
+   margin-top: 40px;
+   margin-bottom: 40px;
+   padding: 20px;
+   -webkit-box-shadow: 0 0 5px rgba(202, 203, 203, .5);
+   -moz-box-shadow: 0 0 5px rgba(202, 203, 204, .5);
+}
+
+.page-home .posts-expand {
+    padding-top: 10px;
+}
+
+.post-body p a {
+    color: #0593d3;
+    border-bottom: none;
+    &:hover {
+    color: #0477ab;
+    text-decoration: underline;
+  }
+}
+
+// 调整 banner 内边距
+.header-inner {
+  padding: 50px 0 30px;
+}
+
+.sidebar-toggle {
+  left :30px;
+}
+
+// 深色背景请解开下面的注释，浅色请注释
+/*
+// 副标题字颜色
+.site-subtitle, .site-nav a, span.exturl, .site-brand-wrapper .brand {
+  color: #FFFFFF;
+}
+
+// 导航栏菜单激活背景色
+.menu .menu-item a:hover, .menu-item-active a {
+  background: #555;
+}
+
+// // 站名上下线条色
+.logo-line-before i, .logo-line-after i {
+  background:  #FFF;
+}
+*/
+
+// 阅读更多调整居中加 border
+.post-body .post-button {
+  text-align: center;
+}
+
+.post-body .post-button a {
+  padding: 0px 10px;
+  border: 2px solid #666;
+}
+
+// 分页页码居中
+.footer-inner, .posts-expand .post-tags, .pagination {
+  text-align: center;
+}
+
+// 边栏背景色
+.sidebar {
+  background: #111;
+}
+
+// 文章页 magin
+.posts-expand .post, .post {
+  margin-top: 0px;
+}
+
+// 首先文章标题居中
+.posts-expand .post-title, .posts-expand .post-meta {
+  text-align: center;
+}
+
+//代码块复制按钮
+.highlight {
+  //方便copy代码按钮（btn-copy）的定位
+  position: relative;
+}
+
+.btn-copy {
+    display: inline-block;
+    cursor: pointer;
+    background-color: #eee;
+    background-image: linear-gradient(#fcfcfc,#eee);
+    border: 1px solid #d5d5d5;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #333;
+    -webkit-transition: opacity .3s ease-in-out;
+    -o-transition: opacity .3s ease-in-out;
+    transition: opacity .3s ease-in-out;
+    padding: 2px 6px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    opacity: 0;
+}
+
+.btn-copy span {
+    margin-left: 5px;
+}
+
+.highlight:hover .btn-copy{
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .container .main-inner {
+    padding: 20px 0px;
+    margin-top: 10px;
+  }
+  .header-inner {
+    padding: 50px 0 0px;
+  }
+  .site-nav-toggle {
+    float: left;
+  }
+  .site-meta {
+    margin-left: 40px;
+  }
+  .posts-expand {
+    margin: 0 10px;
+  }
+  .page-home .post {
+    padding: 10px;
+  }
+}
