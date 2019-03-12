@@ -377,6 +377,215 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://eziochiu.github.io/2019/03/12/【转载】iOS进程-线程-间是如何通信的/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="eziochiu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="eziochiu's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/12/【转载】iOS进程-线程-间是如何通信的/" itemprop="url">
+                  【转载】iOS进程间是如何通信的
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              
+              
+            
+
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+                  
+                
+              
+
+              <time title="创建时间：2019-03-12 14:27:27 / 修改时间：17:14:46" itemprop="dateCreated datePublished" datetime="2019-03-12T14:27:27+08:00">2019-03-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/底层原理/" itemprop="url" rel="index"><span itemprop="name">底层原理</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">12k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="总起"><a href="#总起" class="headerlink" title="总起"></a>总起</h1><p>OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。</p>
+<p>上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。</p>
+<p>由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）</p>
+<ul>
+<li>Mach Ports</li>
+<li>Distributed Notifications</li>
+<li>Distributed Objects</li>
+<li>AppleEvents &amp; AppleScript</li>
+<li>Pasteboard</li>
+<li>XPC</li>
+</ul>
+<p>从低级内核抽象到高级，面向对象的API，它们都有各自特殊的表现以及安全特性。但是基础层面来看，它们都是从不同上下文段传递或者获取数据的机制。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/12/【转载】iOS进程-线程-间是如何通信的/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+    </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1695,7 +1904,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1745,7 +1954,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1851,7 +2062,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">57k</span>
+    <span title="站点总字数">69k</span>
   
 
   
@@ -1862,7 +2073,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">52 分钟</span>
+    <span title="站点阅读时长">1:03</span>
   
 </div>
 
