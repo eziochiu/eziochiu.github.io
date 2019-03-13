@@ -412,6 +412,28 @@ POSIX还提供了很多函数，有一套完整的API，包含Pthreads线程的�
 @end
 ```
 
+# 自旋锁os_unfair_lock
+
+由于OSSpinLock的线程安全问题，Apple已经在iOS10废弃了OSSpinLock自旋锁，取而代之的是os_unfair_lock，虽然os_unfair_lock是线程安全的，但代价就是os_unfair_lock的性能效果相对于OSSpinLock大打折扣
+
+os_unfair_lock用法：
+
+```
+#import <os/lock.h>
+// 初始化
+ os_unfair_lock unfair_lock = OS_UNFAIR_LOCK_INIT;
+// 加锁
+os_unfair_lock_lock(&unfair_lock);
+// 解锁
+os_unfair_lock_unlock(&unfair_lock);
+// 尝试加锁，可以加锁则立即加锁并返回 YES,反之返回 NO
+os_unfair_lock_trylock(&unfair_lock);
+/*
+注:解决不同优先级的线程申请锁的时候不会发生优先级反转问题.
+不过相对于 OSSpinLock , os_unfair_lock性能方面减弱了许多.
+*/
+```
+
 ---
 
 # 总结
@@ -433,6 +455,8 @@ POSIX还提供了很多函数，有一套完整的API，包含Pthreads线程的�
 **POSIX\(pthread\_mutex\)：底层的api，复杂的多线程处理建议使用，并且可以封装自己的多线程；**
 
 **OSSpinLock：性能也非常高，可惜出现了线程问题；**
+
+**os_unfair_lock iOS10以后用于替代OSSpinLock的另外一种自旋锁，线程安全，性能相对于OSSpinLock大打折扣**
 
 **dispatch\_barrier\_async/dispatch\_barrier\_sync：测试中发现dispatch\_barrier\_sync比dispatch\_barrier\_async性能要高，真是大出意外。**
 

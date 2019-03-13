@@ -147,7 +147,7 @@
 <meta property="og:site_name" content="eziochiu&#39;s Blog">
 <meta property="og:description" content="何所谓线程安全线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。 在iOS开发中常用的加锁方式有以下几种：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-24T10:09:41.000Z">
+<meta property="og:updated_time" content="2019-03-12T02:29:55.094Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS多线程编程之线程锁">
 <meta name="twitter:description" content="何所谓线程安全线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。 在iOS开发中常用的加锁方式有以下几种：">
@@ -445,7 +445,7 @@
                 
 
                 
-                  <time title="修改时间：2019-02-24 18:09:41" itemprop="dateModified" datetime="2019-02-24T18:09:41+08:00">2019-02-24</time>
+                  <time title="修改时间：2019-03-12 10:29:55" itemprop="dateModified" datetime="2019-03-12T10:29:55+08:00">2019-03-12</time>
                 
 
 
@@ -592,6 +592,9 @@
 <p>-摘自<a href="http://blog.ibireme.com/author/ibireme/" target="_blank" rel="noopener">ibireme</a></p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;libkern/OSAtomic.h&gt;</span><br><span class="line"></span><br><span class="line">#import &lt;libkern/OSAtomic.h&gt;</span><br><span class="line">@interface MYOSSpinLockViewController ()</span><br><span class="line">&#123;</span><br><span class="line">    OSSpinLock spinlock;  //声明pthread_mutex_t的结构</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation MYOSSpinLockViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view.</span><br><span class="line">    spinlock = OS_SPINLOCK_INIT;</span><br><span class="line">    /**</span><br><span class="line">     *  初始化</span><br><span class="line">     *</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)getIamgeName:(NSMutableArray *)imageNames&#123;</span><br><span class="line">    NSString *imageName;</span><br><span class="line">    /**</span><br><span class="line">     *  加锁</span><br><span class="line">     */</span><br><span class="line">    OSSpinLockLock(&amp;spinlock);</span><br><span class="line">    if (imageNames.count&gt;0) &#123;</span><br><span class="line">        imageName = [imageNames firstObject];</span><br><span class="line">        [imageNames removeObjectAtIndex:0];</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     *  解锁</span><br><span class="line">     */</span><br><span class="line">    OSSpinLockUnlock(&amp;spinlock);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h1 id="自旋锁os-unfair-lock"><a href="#自旋锁os-unfair-lock" class="headerlink" title="自旋锁os_unfair_lock"></a>自旋锁os_unfair_lock</h1><p>由于OSSpinLock的线程安全问题，Apple已经在iOS10废弃了OSSpinLock自旋锁，取而代之的是os_unfair_lock，虽然os_unfair_lock是线程安全的，但代价就是os_unfair_lock的性能效果相对于OSSpinLock大打折扣</p>
+<p>os_unfair_lock用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;os/lock.h&gt;</span><br><span class="line">// 初始化</span><br><span class="line"> os_unfair_lock unfair_lock = OS_UNFAIR_LOCK_INIT;</span><br><span class="line">// 加锁</span><br><span class="line">os_unfair_lock_lock(&amp;unfair_lock);</span><br><span class="line">// 解锁</span><br><span class="line">os_unfair_lock_unlock(&amp;unfair_lock);</span><br><span class="line">// 尝试加锁，可以加锁则立即加锁并返回 YES,反之返回 NO</span><br><span class="line">os_unfair_lock_trylock(&amp;unfair_lock);</span><br><span class="line">/*</span><br><span class="line">注:解决不同优先级的线程申请锁的时候不会发生优先级反转问题.</span><br><span class="line">不过相对于 OSSpinLock , os_unfair_lock性能方面减弱了许多.</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
 <hr>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>@synchronized：适用线程不多，任务量不大的多线程加锁；</strong></p>
 <p><strong>NSLock：其实NSLock并没有想象中的那么差，不知道大家为什么不推荐使用；</strong></p>
@@ -602,6 +605,7 @@
 <p><strong>NSDistributedLock：因为是MAC开发的，就不讨论了；</strong></p>
 <p><strong>POSIX(pthread_mutex)：底层的api，复杂的多线程处理建议使用，并且可以封装自己的多线程；</strong></p>
 <p><strong>OSSpinLock：性能也非常高，可惜出现了线程问题；</strong></p>
+<p><strong>os_unfair_lock iOS10以后用于替代OSSpinLock的另外一种自旋锁，线程安全，性能相对于OSSpinLock大打折扣</strong></p>
 <p><strong>dispatch_barrier_async/dispatch_barrier_sync：测试中发现dispatch_barrier_sync比dispatch_barrier_async性能要高，真是大出意外。</strong></p>
 
       
@@ -626,7 +630,7 @@
   <p><span>文章作者:</span><a href="/" title="访问 eziochiu 的个人博客">eziochiu</a></p>
   <p><span>发布时间:</span>2017年02月24日 - 18:02</p>
   
-    <p><span>最后更新:</span>2019年02月24日 - 18:02</p>
+    <p><span>最后更新:</span>2019年03月12日 - 10:03</p>
   
   <p><span>原始链接:</span><a href="/2017/02/24/iOS多线程编程之线程锁/" title="iOS多线程编程之线程锁">https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/" aria-label="复制成功！"></i></span>
@@ -790,7 +794,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-count">7</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -840,7 +844,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">9</span>
+                      
+                    
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -928,7 +934,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#何所谓线程安全"><span class="nav-number">1.</span> <span class="nav-text">何所谓线程安全</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSLock"><span class="nav-number">2.</span> <span class="nav-text">NSLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized"><span class="nav-number">3.</span> <span class="nav-text">@synchronized</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件信号量dispatch-semaphore-t"><span class="nav-number">4.</span> <span class="nav-text">条件信号量dispatch_semaphore_t</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch-barrier-async-dispatch-barrier-sync"><span class="nav-number">5.</span> <span class="nav-text">dispatch_barrier_async/dispatch_barrier_sync</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSCondition"><span class="nav-number">6.</span> <span class="nav-text">NSCondition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件锁NSConditionLock"><span class="nav-number">7.</span> <span class="nav-text">条件锁NSConditionLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#递归锁NSRecursiveLock"><span class="nav-number">8.</span> <span class="nav-text">递归锁NSRecursiveLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSDistributedLock"><span class="nav-number">9.</span> <span class="nav-text">NSDistributedLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#互斥锁POSIX"><span class="nav-number">10.</span> <span class="nav-text">互斥锁POSIX</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自旋锁OSSpinLock"><span class="nav-number">11.</span> <span class="nav-text">自旋锁OSSpinLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">12.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#何所谓线程安全"><span class="nav-number">1.</span> <span class="nav-text">何所谓线程安全</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSLock"><span class="nav-number">2.</span> <span class="nav-text">NSLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#synchronized"><span class="nav-number">3.</span> <span class="nav-text">@synchronized</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件信号量dispatch-semaphore-t"><span class="nav-number">4.</span> <span class="nav-text">条件信号量dispatch_semaphore_t</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch-barrier-async-dispatch-barrier-sync"><span class="nav-number">5.</span> <span class="nav-text">dispatch_barrier_async/dispatch_barrier_sync</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSCondition"><span class="nav-number">6.</span> <span class="nav-text">NSCondition</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#条件锁NSConditionLock"><span class="nav-number">7.</span> <span class="nav-text">条件锁NSConditionLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#递归锁NSRecursiveLock"><span class="nav-number">8.</span> <span class="nav-text">递归锁NSRecursiveLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NSDistributedLock"><span class="nav-number">9.</span> <span class="nav-text">NSDistributedLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#互斥锁POSIX"><span class="nav-number">10.</span> <span class="nav-text">互斥锁POSIX</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自旋锁OSSpinLock"><span class="nav-number">11.</span> <span class="nav-text">自旋锁OSSpinLock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自旋锁os-unfair-lock"><span class="nav-number">12.</span> <span class="nav-text">自旋锁os_unfair_lock</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">13.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -962,7 +968,7 @@
     
       <span class="post-meta-item-text">站点总字数：</span>
     
-    <span title="站点总字数">57k</span>
+    <span title="站点总字数">69k</span>
   
 
   
@@ -973,7 +979,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">52 分钟</span>
+    <span title="站点阅读时长">1:03</span>
   
 </div>
 

@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://eziochiu.github.io/"/>
-  <updated>2019-02-27T02:12:03.000Z</updated>
+  <updated>2019-03-13T04:47:18.887Z</updated>
   <id>https://eziochiu.github.io/</id>
   
   <author>
@@ -17,11 +17,44 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>【转载】iOS进程间是如何通信的</title>
+    <link href="https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/"/>
+    <id>https://eziochiu.github.io/2019/03/12/【转载】iOS进程-线程-间是如何通信的/</id>
+    <published>2019-03-12T06:27:27.000Z</published>
+    <updated>2019-03-13T04:47:18.887Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;总起&quot;&gt;&lt;a href=&quot;#总起&quot; class=&quot;headerlink&quot; title=&quot;总起&quot;&gt;&lt;/a&gt;总起&lt;/h1&gt;&lt;p&gt;OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。&lt;/p&gt;
+&lt;p&gt;上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。&lt;/p&gt;
+&lt;p&gt;由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mach Ports&lt;/li&gt;
+&lt;li&gt;Distributed Notifications&lt;/li&gt;
+&lt;li&gt;Distributed Objects&lt;/li&gt;
+&lt;li&gt;AppleEvents &amp;amp; AppleScript&lt;/li&gt;
+&lt;li&gt;Pasteboard&lt;/li&gt;
+&lt;li&gt;XPC&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从低级内核抽象到高级，面向对象的API，它们都有各自特殊的表现以及安全特性。但是基础层面来看，它们都是从不同上下文段传递或者获取数据的机制。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="转载" scheme="https://eziochiu.github.io/tags/%E8%BD%AC%E8%BD%BD/"/>
+    
+  </entry>
+  
+  <entry>
     <title>iOS Reveal2Loader修复版</title>
     <link href="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88/"/>
     <id>https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/</id>
     <published>2019-02-25T03:59:00.000Z</published>
-    <updated>2019-02-27T02:12:03.000Z</updated>
+    <updated>2019-03-02T02:44:54.523Z</updated>
     
     <summary type="html">
     
@@ -43,7 +76,7 @@
     <link href="https://eziochiu.github.io/2018/06/22/iOS%E5%BA%95%E5%B1%82%E4%B9%8BBlock/"/>
     <id>https://eziochiu.github.io/2018/06/22/iOS底层之Block/</id>
     <published>2018-06-22T10:38:52.000Z</published>
-    <updated>2019-02-24T10:25:49.000Z</updated>
+    <updated>2019-03-02T02:44:54.528Z</updated>
     
     <summary type="html">
     
@@ -70,7 +103,7 @@
     <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8BGCD-%E6%9B%B4%E6%96%B0swift3-0%E7%94%A8%E6%B3%95/"/>
     <id>https://eziochiu.github.io/2018/04/20/iOS多线程编程之GCD-更新swift3-0用法/</id>
     <published>2018-04-20T09:38:52.000Z</published>
-    <updated>2019-02-24T10:02:57.000Z</updated>
+    <updated>2019-03-02T02:44:54.528Z</updated>
     
     <summary type="html">
     
@@ -94,7 +127,7 @@
     <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/"/>
     <id>https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/</id>
     <published>2018-04-20T09:38:52.000Z</published>
-    <updated>2019-02-26T01:13:08.000Z</updated>
+    <updated>2019-03-02T02:44:54.529Z</updated>
     
     <summary type="html">
     
@@ -116,7 +149,7 @@
     <link href="https://eziochiu.github.io/2017/04/11/Notification%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     <id>https://eziochiu.github.io/2017/04/11/Notification与多线程/</id>
     <published>2017-04-11T09:38:52.000Z</published>
-    <updated>2019-02-24T09:53:14.000Z</updated>
+    <updated>2019-03-12T11:45:03.600Z</updated>
     
     <summary type="html">
     
@@ -140,7 +173,7 @@
     <link href="https://eziochiu.github.io/2017/02/24/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E9%94%81/"/>
     <id>https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/</id>
     <published>2017-02-24T10:04:15.000Z</published>
-    <updated>2019-02-24T10:09:41.000Z</updated>
+    <updated>2019-03-12T02:29:55.094Z</updated>
     
     <summary type="html">
     

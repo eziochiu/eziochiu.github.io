@@ -76,152 +76,107 @@ For example, if an object running in a background thread is listening for notifi
 ## 在不同线程中post和转发一个Notification
 
 ```
-@interface ViewController () <NSMachPortDelegate>
-@property (nonatomic) NSMutableArray    *notifications;         // 通知队列
-@property (nonatomic) NSThread          *notificationThread;    // 期望线程
-@property (nonatomic) NSLock            *notificationLock;      // 用于对通知队列加锁的锁对象，避免线程冲突
-@property (nonatomic) NSMachPort        *notificationPort;      // 用于向期望线程发送信号的通信端口
-	
+#import "ViewController.h"
+
+@interface ViewController ()<NSMachPortDelegate>
+@property (nonatomic ,strong) NSMachPort *machPort;
+@property (nonatomic ,strong) NSThread *thread;
+@property (nonatomic ,strong) NSLock *lock;
+@property (nonatomic ,strong) NSMutableArray *notifiQueue;//通知队列
 @end
-	
+
 @implementation ViewController
-	
+
+static void Callback(CFNotificationCenterRef center,
+                     void *observer,
+                     CFStringRef name,
+                     const void *object,
+                     CFDictionaryRef userInfo)
+{
+    NSLog(@"CFNotificationCenterRef====%@====%@",[NSThread currentThread],name);
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSLog(@"current thread = %@", [NSThread currentThread]);
-    
-    // 初始化
-    self.notifications = [[NSMutableArray alloc] init];
-    self.notificationLock = [[NSLock alloc] init];
-    
-    self.notificationThread = [NSThread currentThread];
-    self.notificationPort = [[NSMachPort alloc] init];
-    self.notificationPort.delegate = self;
+    self.notifiQueue = @[].mutableCopy;
+    self.thread = [NSThread currentThread];
+    self.lock = [[NSLock alloc] init];
+    self.machPort = [[NSMachPort alloc] init];
+    self.machPort.delegate = self;
     
     // 往当前线程的run loop添加端口源
-    // 当Mach消息到达而接收线程的run loop没有运行时，则内核会保存这条消息，直到下一次进入run loop
-    [[NSRunLoop currentRunLoop] addPort:self.notificationPort
-                                forMode:(__bridge NSString *)kCFRunLoopCommonModes];
+    // 当Mach消息到达而接收线程的runloop没有运行时，则内核会保存这条消息，直到下一次进入runloop
+    [[NSRunLoop currentRunLoop] addPort:self.machPort forMode:(__bridge NSString *)kCFRunLoopCommonModes];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(processNotification:) name:@"TestNotification" object:nil];
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:TEST_NOTIFICATION object:nil userInfo:nil];
-	
-    });
+    //CFNotificationCenterRef:通过CFNotificationCenterRef发送出来的通知无论是在子线程还是主线程最终都会h转发到主线程中
+    CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
+
+    CFNotificationSuspensionBehavior behavior = CFNotificationSuspensionBehaviorDeliverImmediately;
+
+    CFNotificationCenterAddObserver(center,
+                                    NULL,
+                                    Callback,
+                                    CFSTR("notification.identifier"),
+                                    NULL,
+                                    behavior);
+    //NSNotificationCenter:子线程发出的通知依旧在子线程
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSome:) name:@"notification.identifier" object:nil];
 }
-	
-- (void)handleMachMessage:(void *)msg {
-    
-    [self.notificationLock lock];
-    
-    while ([self.notifications count]) {
-        NSNotification *notification = [self.notifications objectAtIndex:0];
-        [self.notifications removeObjectAtIndex:0];
-        [self.notificationLock unlock];
-        [self processNotification:notification];
-        [self.notificationLock lock];
-    };
-    
-    [self.notificationLock unlock];
+
+- (void)doSome:(NSNotification *)notifi {
+    NSLog(@"NSNotificationCenter====%@====%@",[NSThread currentThread],notifi.name);
 }
-	
-- (void)processNotification:(NSNotification *)notification {
-    
-    if ([NSThread currentThread] != _notificationThread) {
-        // Forward the notification to the correct thread.
-        [self.notificationLock lock];
-        [self.notifications addObject:notification];
-        [self.notificationLock unlock];
-        [self.notificationPort sendBeforeDate:[NSDate date]
+
+- (void)processNotification:(NSNotification *)notifi {
+    if ([NSThread currentThread] != self.thread) {
+        NSLog(@"NSMachPort if====%@====%@",[NSThread currentThread],notifi.name);
+        [self.lock lock];
+        [self.notifiQueue addObject:notifi];
+        [self.lock unlock];
+        //通过MachPort转发子线程通知到主线程
+        [self.machPort sendBeforeDate:[NSDate date]
                                    components:nil
                                          from:nil
                                      reserved:0];
-    }
-    else {
-        // Process the notification here;
-        NSLog(@"current thread = %@", [NSThread currentThread]);
-        NSLog(@"process notification");
+    } else {
+        NSLog(@"NSMachPort else====%@====%@", [NSThread currentThread],notifi.name);
     }
 }
-	
-@end
-```
 
+// MARK: - NSMachPortDelegate
 
-
-运行后，其输出如下：
-
-```
-2015-03-11 23:38:31.637 test[1474:92483] current thread = <NSThread: 0x7ffa4070ed50>{number = 1, name = main}
-2015-03-11 23:38:31.663 test[1474:92483] current thread = <NSThread: 0x7ffa4070ed50>{number = 1, name = main}
-2015-03-11 23:38:31.663 test[1474:92483] process notification
-```
-
-
-
-可以看到，我们在全局dispatch队列中抛出的Notification，如愿地在主线程中接收到了。
-
-这种实现方式的具体解析及其局限性大家可以参考官方文档[Delivering Notifications To Particular Threads](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Notifications/Articles/Threading.html#//apple_ref/doc/uid/20001289-CEGJFDFG)，在此不多做解释。当然，更好的方法可能是我们自己去子类化一个NSNotificationCenter，或者单独写一个类来处理这种转发。
-
-# NSNotificationCenter的线程安全性
-
-苹果之所以采取通知中心在同一个线程中post和转发同一消息这一策略，应该是出于线程安全的角度来考量的。官方文档告诉我们，NSNotificationCenter是一个线程安全类，我们可以在多线程环境下使用同一个NSNotificationCenter对象而不需要加锁。原文在[Threading Programming Guide](https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/Multithreading/ThreadSafetySummary/ThreadSafetySummary.html)中，具体如下：
-
-```
-The following classes and functions are generally considered to be thread-safe. You can use the same instance from multiple threads without first acquiring a lock.
-	
-NSArray
-...
-NSNotification
-NSNotificationCenter
-...
-```
-
-
-
-我们可以在任何线程中添加/删除通知的观察者，也可以在任何线程中post一个通知。
-
-NSNotificationCenter在线程安全性方面已经做了不少工作了，那是否意味着我们可以高枕无忧了呢？再回过头来看看第一个例子，我们稍微改造一下，一点一点来：
-
-## NSNotificationCenter的通用模式
-
-```
-@interface Observer : NSObject
-	
-@end
-	
-@implementation Observer
-	
-- (instancetype)init
-{
-    self = [super init];
-    
-    if (self)
-    {
-        _poster = [[Poster alloc] init];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:TEST_NOTIFICATION object:nil]
-    }
-    
-    return self;
+- (void)handleMachMessage:(void *)msg {
+    [self.lock lock];
+    NSLog(@"self.notifiQueue ==== %@",self.notifiQueue);
+    while ([self.notifiQueue count]) {
+        NSNotification *notification = [self.notifiQueue objectAtIndex:0];
+        [self.notifiQueue removeObjectAtIndex:0];
+        [self.lock unlock];
+        [self processNotification:notification];
+        [self.lock lock];
+    };
+    [self.lock unlock];
 }
-	
-- (void)handleNotification:(NSNotification *)notification
-{
-    NSLog(@"handle notification ");
-}
-	
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-	
+
 @end
+
 // 其它地方
-[[NSNotificationCenter defaultCenter] postNotificationName:TEST_NOTIFICATION object:nil];
+dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        void *Object;
+        CFDictionaryRef userInfo;
+        CFNotificationCenterRef center = CFNotificationCenterGetDarwinNotifyCenter();
+        CFNotificationCenterPostNotification(center,
+                                             CFSTR("notification.identifier"),
+                                             Object,
+                                             userInfo,
+                                             true);
+        NSLog(@"CFNotificationCenterRef====%@====%p",[NSThread currentThread],Object);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"notification.identifier" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TestNotification" object:nil];
+        NSLog(@"NSNotificationCenter====%@",[NSThread currentThread]);
+    });
 ```
 
 
