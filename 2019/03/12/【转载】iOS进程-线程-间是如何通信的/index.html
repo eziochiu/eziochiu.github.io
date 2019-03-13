@@ -148,7 +148,7 @@
 <meta property="og:description" content="总起OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。 上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。 由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）  Mach P">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://eziochiu.github.io/2019/03/12/【转载】iOS进程-线程-间是如何通信的/articlex.png">
-<meta property="og:updated_time" content="2019-03-12T09:14:46.096Z">
+<meta property="og:updated_time" content="2019-03-13T04:47:18.887Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【转载】iOS进程间是如何通信的">
 <meta name="twitter:description" content="总起OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。 上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。 由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）  Mach P">
@@ -426,15 +426,30 @@
 
               
                 
-                  
+              
+
+              <time title="创建时间：2019-03-12 14:27:27" itemprop="dateCreated datePublished" datetime="2019-03-12T14:27:27+08:00">2019-03-12</time>
+            
+
+            
+              
+
+              
                 
-              
+                <span class="post-meta-divider">|</span>
+                
 
-              <time title="创建时间：2019-03-12 14:27:27 / 修改时间：17:14:46" itemprop="dateCreated datePublished" datetime="2019-03-12T14:27:27+08:00">2019-03-12</time>
-            
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
 
-            
-              
+                
+                  <time title="修改时间：2019-03-13 12:47:18" itemprop="dateModified" datetime="2019-03-13T12:47:18+08:00">2019-03-13</time>
+                
+
 
               
             
@@ -581,7 +596,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;Safari.h&quot;</span><br><span class="line"></span><br><span class="line">SafariApplication *safari = [SBApplication applicationWithBundleIdentifier:@&quot;com.apple.Safari&quot;];</span><br><span class="line"></span><br><span class="line">for (SafariWindow *window in safari.windows) &#123;</span><br><span class="line">    if (window.visible) &#123;</span><br><span class="line">        window.currentTab.URL = [NSURL URLWithString:@&quot;http://nshipster.com&quot;];</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>对比AppleScript上面显得冗繁了点，但是却更容易集成到已存在的代码中去。在可读性上更优因为毕竟长得更像OC。</p>
 <p>唉，AppleScript的星芒也正出现消退，在最近发布的OS X与iWork应用证答复减少它的戏份。从这点说，未必值得在你的应用中去添加这项（脚本）支持。</p>
-<p>Pasteboard<br>剪贴板是OS X与iOS最常见的进程间通信机制。当用户跨应用拷贝了一段文字，图片，文档，这时候通过mach port的com.apple.pboard服务媒介进行从一个进程到另一个进程的数据交换。</p>
+<h1 id="Pasteboard"><a href="#Pasteboard" class="headerlink" title="Pasteboard"></a>Pasteboard</h1><p>剪贴板是OS X与iOS最常见的进程间通信机制。当用户跨应用拷贝了一段文字，图片，文档，这时候通过mach port的com.apple.pboard服务媒介进行从一个进程到另一个进程的数据交换。</p>
 <p>OS X上是NSPasteboard，iOS上对应的是UIPasteboard。它们几乎是别无二致，但尽管大致一样，对比OS X iOS上提供了更简洁，更现代化却又不影响功效的API。</p>
 <p>编写剪贴板代码几乎就跟在GUI应用上使用Edit &gt; Copy操作一样简单：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NSImage *image;</span><br><span class="line"></span><br><span class="line">NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];</span><br><span class="line">[pasteboard clearContents];</span><br><span class="line">[pasteboard writeObjects:@[image]];</span><br></pre></td></tr></table></figure>
@@ -648,7 +663,7 @@
   <p><span>文章作者:</span><a href="/" title="访问 eziochiu 的个人博客">eziochiu</a></p>
   <p><span>发布时间:</span>2019年03月12日 - 14:03</p>
   
-    <p><span>最后更新:</span>2019年03月12日 - 17:03</p>
+    <p><span>最后更新:</span>2019年03月13日 - 12:03</p>
   
   <p><span>原始链接:</span><a href="/2019/03/12/【转载】iOS进程-线程-间是如何通信的/" title="【转载】iOS进程间是如何通信的">https://eziochiu.github.io/2019/03/12/【转载】iOS进程-线程-间是如何通信的/</a>
     <span class="copy-path" title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://eziochiu.github.io/2019/03/12/【转载】iOS进程-线程-间是如何通信的/" aria-label="复制成功！"></i></span>
@@ -952,7 +967,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#总起"><span class="nav-number">1.</span> <span class="nav-text">总起</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-Ports"><span class="nav-number">2.</span> <span class="nav-text">Mach Ports</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Distributed-Notifications"><span class="nav-number">3.</span> <span class="nav-text">Distributed Notifications</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Distributed-Objects"><span class="nav-number">4.</span> <span class="nav-text">Distributed Objects</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AppleEvents-amp-AppleScript"><span class="nav-number">5.</span> <span class="nav-text">AppleEvents &amp; AppleScript</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cocoa-Scripting-Bridge"><span class="nav-number">6.</span> <span class="nav-text">Cocoa Scripting Bridge</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XPC"><span class="nav-number">7.</span> <span class="nav-text">XPC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务注册"><span class="nav-number">8.</span> <span class="nav-text">服务注册</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#总起"><span class="nav-number">1.</span> <span class="nav-text">总起</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Mach-Ports"><span class="nav-number">2.</span> <span class="nav-text">Mach Ports</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Distributed-Notifications"><span class="nav-number">3.</span> <span class="nav-text">Distributed Notifications</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Distributed-Objects"><span class="nav-number">4.</span> <span class="nav-text">Distributed Objects</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#AppleEvents-amp-AppleScript"><span class="nav-number">5.</span> <span class="nav-text">AppleEvents &amp; AppleScript</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cocoa-Scripting-Bridge"><span class="nav-number">6.</span> <span class="nav-text">Cocoa Scripting Bridge</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pasteboard"><span class="nav-number">7.</span> <span class="nav-text">Pasteboard</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#XPC"><span class="nav-number">8.</span> <span class="nav-text">XPC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#服务注册"><span class="nav-number">9.</span> <span class="nav-text">服务注册</span></a></li></ol></div>
             
 
           </div>
