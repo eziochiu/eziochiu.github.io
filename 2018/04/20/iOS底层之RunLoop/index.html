@@ -144,7 +144,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS底层之RunLoop">
 <meta property="og:url" content="https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/index.html">
-<meta property="og:site_name" content="eziochiu&#39;s Blog">
+<meta property="og:site_name" content="eziochiu">
 <meta property="og:description" content="runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自此博客。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/RunLoop_0.png">
@@ -152,7 +152,7 @@
 <meta property="og:image" content="https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/RunLoop_3.png">
 <meta property="og:image" content="https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/RunLoop_4.png">
 <meta property="og:image" content="https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/RunLoop_network.png">
-<meta property="og:updated_time" content="2019-03-16T04:02:16.674Z">
+<meta property="og:updated_time" content="2019-03-18T12:48:52.536Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS底层之RunLoop">
 <meta name="twitter:description" content="runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自此博客。">
@@ -160,7 +160,7 @@
 
 
 
-  <link rel="alternate" href="/atom.xml" title="eziochiu's Blog" type="application/atom+xml">
+  <link rel="alternate" href="/atom.xml" title="eziochiu" type="application/atom+xml">
 
 
 
@@ -175,7 +175,7 @@
   };
 </script>
 
-  <title>iOS底层之RunLoop | eziochiu's Blog</title>
+  <title>iOS底层之RunLoop | eziochiu</title>
   
 
 
@@ -242,7 +242,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">eziochiu's Blog</span>
+        <span class="site-title">eziochiu</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -397,7 +397,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="eziochiu's Blog">
+      <meta itemprop="name" content="eziochiu">
     </span>
 
     
@@ -518,7 +518,7 @@
 <h1 id="RunLoop的概念"><a href="#RunLoop的概念" class="headerlink" title="RunLoop的概念"></a>RunLoop的概念</h1><p>一般来讲，一个线程一次只能执行一次任务，任务完成之后线程就会退出，但是如果一种这种机制，让一条线程既能处理事件又不退出，通常会设置一个无线的死循环，让这条线程在里面跑而不退出，一般的代码可以这样写：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function loop() &#123;</span><br><span class="line">    initialize();</span><br><span class="line">    do &#123;</span><br><span class="line">        var message = get_next_message();</span><br><span class="line">        process_message(message);</span><br><span class="line">    &#125; while (message != quit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上面这种模型我们通常称之为event loop。这种事件的处理模型在很多开发中都有，比如安卓开发中也有类似的loop循环，Windows的程序的循环消息，iOS/OSX的runloop等等。</p>
-<p>所以runloop实际上也是一个对象，这个对象处理了很多东西，触摸事件和方法回调，并提供一个入口函数来执行event loop逻辑，线程执行完毕之后会一直处于“接收消息 - 等待 - 处理”的循环之中，直到这个循环结束，函数返回。</p>
+<p>所以runloop实际上也是一个对象，这个对象处理了很多东西，触摸事件和方法回调，并ti’gong’yi’ge提供一个入口函数来执行event loop逻辑，线程执行完毕之后会一直处于“接收消息 - 等待 - 处理”的循环之中，直到这个循环结束，函数返回。</p>
 <p>在iOS/OSX中提供了两种这样的对象：NSRunLoop和CFRunLoopRef。其中NSRunLoop是基于CFRunLoopRef的第二层封装，更加面向对象，但是NSRunLoop的API的线程是不安全的。</p>
 <p>而CFRunLoopRef是在CoreFoundation的框架内的，它提供了纯C语言的API，所以这些API的线程是安全的。CFRunLoopRef 的代码是<a href="http://opensource.apple.com/source/CF/CF-855.17/CFRunLoop.c" target="_blank" rel="noopener">开源</a>的，你可以在这里<a href="http://opensource.apple.com/tarballs/CF/" target="_blank" rel="noopener">http://opensource.apple.com/tarballs/CF/</a>下载到整个CoreFoundation 的源码来查看。</p>
 <hr>
@@ -803,7 +803,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -822,7 +822,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -857,7 +859,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">11</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -990,7 +996,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">1:13</span>
+    <span title="站点阅读时长">1:14</span>
   
 </div>
 
