@@ -29,7 +29,7 @@ function loop() {
 
 上面这种模型我们通常称之为event loop。这种事件的处理模型在很多开发中都有，比如安卓开发中也有类似的loop循环，Windows的程序的循环消息，iOS/OSX的runloop等等。
 
-所以runloop实际上也是一个对象，这个对象处理了很多东西，触摸事件和方法回调，并ti'gong'yi'ge提供一个入口函数来执行event loop逻辑，线程执行完毕之后会一直处于“接收消息 - 等待 - 处理”的循环之中，直到这个循环结束，函数返回。
+所以runloop实际上也是一个对象，这个对象处理了很多东西，触摸事件和方法回调，并提供一个入口函数来执行event loop逻辑，线程执行完毕之后会一直处于“接收消息 - 等待 - 处理”的循环之中，直到这个循环结束，函数返回。
 
 在iOS/OSX中提供了两种这样的对象：NSRunLoop和CFRunLoopRef。其中NSRunLoop是基于CFRunLoopRef的第二层封装，更加面向对象，但是NSRunLoop的API的线程是不安全的。
 
