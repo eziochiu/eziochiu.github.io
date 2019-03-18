@@ -171,28 +171,6 @@
   </entry>
   
   <entry>
-    <title>iOS性能优化思路</title>
-    <link href="https://eziochiu.github.io/2017/09/18/iOS%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E6%80%9D%E8%B7%AF/"/>
-    <id>https://eziochiu.github.io/2017/09/18/iOS性能优化思路/</id>
-    <published>2017-09-18T08:35:31.000Z</published>
-    <updated>2019-03-18T12:44:14.670Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在iOS开发领域，性能优化永远是一个聊不完的话题，因为性能优化到什么程度，完全取决于开发者对性能优化的理解，然而性能却对iOS应用的开发尤其重要，如果你的应用失去反应或者很慢，失望的用户会把他们的失望写满App Store的评论。然而由于iOS设备的限制，有时搞好性能是一件难事。开发过程中你会有很多需要注意的事项，你也很容易在做出选择时忘记考虑性能影响。&lt;br&gt;&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="性能优化" scheme="https://eziochiu.github.io/categories/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
-    
-    
-      <category term="性能优化" scheme="https://eziochiu.github.io/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
-    
-      <category term="iOS" scheme="https://eziochiu.github.io/tags/iOS/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Notification与多线程</title>
     <link href="https://eziochiu.github.io/2017/04/11/Notification%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     <id>https://eziochiu.github.io/2017/04/11/Notification与多线程/</id>
