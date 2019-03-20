@@ -147,7 +147,7 @@
 <meta property="og:site_name" content="eziochiu">
 <meta property="og:description" content="在此之前需要先了解一个概念 - 闭包（swift中叫闭包），在维基百科中，闭包的定义如下：  123In programming languages, a closure is a function or reference to a function together with a referencingenvironment—a table storing a reference to ea">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-20T01:38:59.437Z">
+<meta property="og:updated_time" content="2019-03-20T01:41:42.731Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS底层之Block">
 <meta name="twitter:description" content="在此之前需要先了解一个概念 - 闭包（swift中叫闭包），在维基百科中，闭包的定义如下：  123In programming languages, a closure is a function or reference to a function together with a referencingenvironment—a table storing a reference to ea">
@@ -522,7 +522,7 @@
 <p>根据runtime.c中的对象定义，凡是首地址为*isa的结构体指针，都认为是对象。然而在OC中，block其实也被默认定义为对象。</p>
 <p>通过上面的2附图其实我们可以知道，一个block实际上是由6部分组成：</p>
 <blockquote>
-<p>1、isa指针，所有对象都有一个isa指针，上面也讲到过了，它用于实现对象的一些相关的功能；<br>2、flags，用于按bit位表示的block的附加信息，后面讲block为什么要用copy的时候会讲到；<br>3、reserved，保留的变量；<br>4、invoke，函数指针，用于具体指向block内部实现的函数的调用地址；<br>5、descriptor，表示该block的附加描述信息；**<br>6、variables，捕获过来的变量，block之所以能够访问外部的局部变量，是因为j将这些变量或者变量的地址拷贝到了这个block的结构体中</p>
+<p>1、isa指针，所有对象都有一个isa指针，上面也讲到过了，它用于实现对象的一些相关的功能；<br>2、flags，用于按bit位表示的block的附加信息，后面讲block为什么要用copy的时候会讲到；<br>3、reserved，保留的变量；<br>4、invoke，函数指针，用于具体指向block内部实现的函数的调用地址；<br>5、descriptor，表示该block的附加描述信息；<br>6、variables，捕获过来的变量，block之所以能够访问外部的局部变量，是因为将这些变量或者变量的地址拷贝到了这个block的结构体中</p>
 </blockquote>
 <p>写一个简单的例子：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">void foo_()&#123;</span><br><span class="line">    int i = 2;</span><br><span class="line">    NSNumber *num = @3;</span><br><span class="line"></span><br><span class="line">    long (^myBlock)(void) = ^long() &#123;</span><br><span class="line">        return i * num.intValue;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    long r = myBlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
