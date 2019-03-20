@@ -147,7 +147,7 @@
 <meta property="og:site_name" content="eziochiu">
 <meta property="og:description" content="在此之前需要先了解一个概念 - 闭包（swift中叫闭包），在维基百科中，闭包的定义如下：  123In programming languages, a closure is a function or reference to a function together with a referencingenvironment—a table storing a reference to ea">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-20T01:48:11.818Z">
+<meta property="og:updated_time" content="2019-03-20T01:54:42.569Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS底层之Block">
 <meta name="twitter:description" content="在此之前需要先了解一个概念 - 闭包（swift中叫闭包），在维基百科中，闭包的定义如下：  123In programming languages, a closure is a function or reference to a function together with a referencingenvironment—a table storing a reference to ea">
@@ -472,7 +472,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">6.4k</span>
+                <span title="本文字数">6.5k</span>
               
 
               
@@ -534,7 +534,7 @@
 <hr>
 <h1 id="block定义的类型"><a href="#block定义的类型" class="headerlink" title="block定义的类型"></a>block定义的类型</h1><p>在libclosure的block.h（在data.c中也可以找得到）的源码中，我们可以找到block定义的类型：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void * _NSConcreteStackBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteMallocBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteAutoBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteFinalizingBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteGlobalBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteWeakBlockVariable[32] = &#123; 0 &#125;;</span><br></pre></td></tr></table></figure>
-<p>在C语言中定义了6中block，然而在OC当中的block只有种类型，即：</p>
+<p>在C语言中定义了6中block，然而在OC当中的block只有3种类型，即：</p>
 <ul>
 <li><p>NSConcreteStackBlock 定义为栈上创建的block</p>
 </li>
@@ -543,7 +543,7 @@
 <li><p>NSConcreteGlobalBlock 作为全局变量的block</p>
 </li>
 </ul>
-<p>PS：（关于栈和堆以及全局的关系，前一篇以做大致解释）</p>
+<p>PS：在最新的源码中_NSConcreteStackBlock和_NSConcreteGlobalBlock已经被废弃，取而代之的是是_NSConcreteAutoBlock,可能是由于ARC自动管理block内存的原因。</p>
 <h2 id="全局的block"><a href="#全局的block" class="headerlink" title="全局的block"></a>全局的block</h2><p>前面已经提到过</p>
 <blockquote>
 <p><strong>在编译器完成编译之后，block会将其内部的代码全部提取出来，形成一个单独的C语言函数，在创建block时实际上它就是在方法声实现中声明一个结构体，并初始化该结构体的成员变量。而在执行block时，会去调用这个单独的C语言函数，并把该结构体的指针传递过去</strong></p>
@@ -926,7 +926,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">1:13</span>
+    <span title="站点阅读时长">1:14</span>
   
 </div>
 
