@@ -92,9 +92,9 @@
       <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
-    
       <category term="Block" scheme="https://eziochiu.github.io/tags/Block/"/>
+    
+      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
@@ -138,9 +138,9 @@
       <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
-    
       <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
     
   </entry>
   
@@ -162,11 +162,11 @@
       <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
     
+      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
       <category term="Autorelease" scheme="https://eziochiu.github.io/tags/Autorelease/"/>
     
       <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
-    
-      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
