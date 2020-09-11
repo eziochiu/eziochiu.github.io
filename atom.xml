@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://eziochiu.github.io/"/>
-  <updated>2019-03-18T12:48:52.000Z</updated>
+  <updated>2020-09-11T10:04:05.131Z</updated>
   <id>https://eziochiu.github.io/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何利用RunLoop的知识来监测APP卡顿?</title>
+    <link href="https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/"/>
+    <id>https://eziochiu.github.io/2019/09/11/如何利用RunLoop的知识来监测APP卡顿/</id>
+    <published>2019-09-11T09:50:48.000Z</published>
+    <updated>2020-09-11T10:04:05.131Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+      <category term="RunLoop" scheme="https://eziochiu.github.io/categories/RunLoop/"/>
+    
+    
+      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
+    
+  </entry>
   
   <entry>
     <title>【转载】iOS进程间是如何通信的</title>
