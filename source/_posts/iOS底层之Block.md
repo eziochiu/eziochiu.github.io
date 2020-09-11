@@ -57,9 +57,8 @@ struct Block_layout {
 > 2、flags，用于按bit位表示的block的附加信息，后面讲block为什么要用copy的时候会讲到；  
 > 3、reserved，保留的变量；  
 > 4、invoke，函数指针，用于具体指向block内部实现的函数的调用地址；  
-> 5、descriptor，表示该block的附加描述信息；**
-
-**variables，捕获过来的变量，block之所以能够访问外部的局部变量，是因为j将这些变量或者变量的地址拷贝到了这个block的结构体中**
+> 5、descriptor，表示该block的附加描述信息；
+> 6、variables，捕获过来的变量，block之所以能够访问外部的局部变量，是因为将这些变量或者变量的地址拷贝到了这个block的结构体中
 
 写一个简单的例子：
 
@@ -76,7 +75,7 @@ void foo_(){
 }
 ```
 
-在终端中用长廊编译器进行反编译会得到如下的代码
+在终端中用clang进行反编译会得到如下的代码
 
 ```
 struct __block_impl {
@@ -148,7 +147,7 @@ void * _NSConcreteGlobalBlock[32] = { 0 };
 void * _NSConcreteWeakBlockVariable[32] = { 0 };
 ```
 
-在C语言中定义了6中block，然而在OC当中的block只有种类型，即：
+在C语言中定义了6中block，然而在OC当中的block只有3种类型，即：
 
 * NSConcreteStackBlock 定义为栈上创建的block
 
@@ -156,7 +155,7 @@ void * _NSConcreteWeakBlockVariable[32] = { 0 };
 
 * NSConcreteGlobalBlock 作为全局变量的block
 
-PS：（关于栈和堆以及全局的关系，前一篇以做大致解释）
+PS：在最新的源码中_NSConcreteStackBlock和_NSConcreteGlobalBlock已经被废弃，取而代之的是是_NSConcreteAutoBlock,可能是由于ARC自动管理block内存的原因。
 
 ## 全局的block
 
@@ -228,7 +227,7 @@ int main()
 
 ## 堆中的block
 
-> **在栈中的block提到过，当函数调用结束，函数的调用栈会被销毁，那么栈中的block也会被销毁，但是我们一般都需要在函数结束之后任然使用这个block，suo'y所以就需要把栈中的block拷贝到堆上，在copy的同时，栈上的block的类型就转换成了堆上的block。**
+> **在栈中的block提到过，当函数调用结束，函数的调用栈会被销毁，那么栈中的block也会被销毁，但是我们一般都需要在函数结束之后任然使用这个block，所以就需要把栈中的block拷贝到堆上，在copy的同时，栈上的block的类型就转换成了堆上的block。**
 
 > **所以，在MRC时代，block的属性关键字必须是copy。这样就能保证再给block的属性复制的时候，能把栈上的block复制到堆上。**
 

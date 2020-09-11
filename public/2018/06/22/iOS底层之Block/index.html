@@ -147,7 +147,7 @@
 <meta property="og:site_name" content="eziochiu">
 <meta property="og:description" content="在此之前需要先了解一个概念 - 闭包（swift中叫闭包），在维基百科中，闭包的定义如下：  123In programming languages, a closure is a function or reference to a function together with a referencingenvironment—a table storing a reference to ea">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-03-18T12:48:52.536Z">
+<meta property="og:updated_time" content="2019-03-20T01:54:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS底层之Block">
 <meta name="twitter:description" content="在此之前需要先了解一个概念 - 闭包（swift中叫闭包），在维基百科中，闭包的定义如下：  123In programming languages, a closure is a function or reference to a function together with a referencingenvironment—a table storing a reference to ea">
@@ -522,12 +522,11 @@
 <p>根据runtime.c中的对象定义，凡是首地址为*isa的结构体指针，都认为是对象。然而在OC中，block其实也被默认定义为对象。</p>
 <p>通过上面的2附图其实我们可以知道，一个block实际上是由6部分组成：</p>
 <blockquote>
-<p>1、isa指针，所有对象都有一个isa指针，上面也讲到过了，它用于实现对象的一些相关的功能；<br>2、flags，用于按bit位表示的block的附加信息，后面讲block为什么要用copy的时候会讲到；<br>3、reserved，保留的变量；<br>4、invoke，函数指针，用于具体指向block内部实现的函数的调用地址；<br>5、descriptor，表示该block的附加描述信息；**</p>
+<p>1、isa指针，所有对象都有一个isa指针，上面也讲到过了，它用于实现对象的一些相关的功能；<br>2、flags，用于按bit位表示的block的附加信息，后面讲block为什么要用copy的时候会讲到；<br>3、reserved，保留的变量；<br>4、invoke，函数指针，用于具体指向block内部实现的函数的调用地址；<br>5、descriptor，表示该block的附加描述信息；<br>6、variables，捕获过来的变量，block之所以能够访问外部的局部变量，是因为将这些变量或者变量的地址拷贝到了这个block的结构体中</p>
 </blockquote>
-<p><strong>variables，捕获过来的变量，block之所以能够访问外部的局部变量，是因为j将这些变量或者变量的地址拷贝到了这个block的结构体中</strong></p>
 <p>写一个简单的例子：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">void foo_()&#123;</span><br><span class="line">    int i = 2;</span><br><span class="line">    NSNumber *num = @3;</span><br><span class="line"></span><br><span class="line">    long (^myBlock)(void) = ^long() &#123;</span><br><span class="line">        return i * num.intValue;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    long r = myBlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在终端中用长廊编译器进行反编译会得到如下的代码</p>
+<p>在终端中用clang进行反编译会得到如下的代码</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">struct __block_impl &#123;</span><br><span class="line">    void *isa;</span><br><span class="line">    int Flags;</span><br><span class="line">    int Reserved;</span><br><span class="line">    void *FuncPtr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">struct __foo_block_desc_0 &#123;</span><br><span class="line">    size_t reserved;</span><br><span class="line">    size_t Block_size;</span><br><span class="line">    void (*copy)(struct __foo_block_impl_0*, struct __foo_block_impl_0*);</span><br><span class="line">    void (*dispose)(struct __foo_block_impl_0*);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//myBlock的数据结构定义</span><br><span class="line">struct __foo_block_impl_0 &#123;</span><br><span class="line">    struct __block_impl impl;</span><br><span class="line">    struct __foo_block_desc_0* Desc;</span><br><span class="line">    int i;</span><br><span class="line">    NSNumber *num;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//block数据的描述</span><br><span class="line">static struct __foo_block_desc_0 __foo_block_desc_0_DATA = &#123;</span><br><span class="line">    0,</span><br><span class="line">    sizeof(struct __foo_block_impl_0),</span><br><span class="line">    __foo_block_copy_0,</span><br><span class="line">    __foo_block_dispose_0</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//block中的方法</span><br><span class="line">static long __foo_block_func_0(struct __foo_block_impl_0 *__cself) &#123;</span><br><span class="line">    int i = __cself-&gt;i; // bound by copy</span><br><span class="line">    NSNumber *num = __cself-&gt;num; // bound by copy</span><br><span class="line">    return i * num.intValue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void foo()&#123;</span><br><span class="line">    int i = 2;</span><br><span class="line">    NSNumber *num = @3;</span><br><span class="line">    struct __foo_block_impl_0 myBlockT;</span><br><span class="line">    struct __foo_block_impl_0 *myBlock = &amp;myBlockT;</span><br><span class="line">    myBlock-&gt;impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">    myBlock-&gt;impl.Flags = 570425344;</span><br><span class="line">    myBlock-&gt;impl.FuncPtr = __foo_block_func_0;</span><br><span class="line">    myBlock-&gt;Desc = &amp;__foo_block_desc_0_DATA;</span><br><span class="line">    myBlock-&gt;i = i;</span><br><span class="line">    myBlock-&gt;num = num;</span><br><span class="line">    long r = myBlock-&gt;impl.FuncPtr(myBlock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>编译器会根据block捕获的变量，生成具体的结构体定义。block内部的代码将会提取出来，成为一个单独的C函数，创建block时实际上会在实现方法中声明一个结构体（struct），并且初始化该结构体的成员变量。而在执行block时会去调用这个单独的C函数，并把该结构体的指针传递过去。</strong></p>
@@ -535,7 +534,7 @@
 <hr>
 <h1 id="block定义的类型"><a href="#block定义的类型" class="headerlink" title="block定义的类型"></a>block定义的类型</h1><p>在libclosure的block.h（在data.c中也可以找得到）的源码中，我们可以找到block定义的类型：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void * _NSConcreteStackBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteMallocBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteAutoBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteFinalizingBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteGlobalBlock[32] = &#123; 0 &#125;;</span><br><span class="line">void * _NSConcreteWeakBlockVariable[32] = &#123; 0 &#125;;</span><br></pre></td></tr></table></figure>
-<p>在C语言中定义了6中block，然而在OC当中的block只有种类型，即：</p>
+<p>在C语言中定义了6中block，然而在OC当中的block只有3种类型，即：</p>
 <ul>
 <li><p>NSConcreteStackBlock 定义为栈上创建的block</p>
 </li>
@@ -544,7 +543,7 @@
 <li><p>NSConcreteGlobalBlock 作为全局变量的block</p>
 </li>
 </ul>
-<p>PS：（关于栈和堆以及全局的关系，前一篇以做大致解释）</p>
+<p>PS：在最新的源码中_NSConcreteStackBlock和_NSConcreteGlobalBlock已经被废弃，取而代之的是是_NSConcreteAutoBlock,可能是由于ARC自动管理block内存的原因。</p>
 <h2 id="全局的block"><a href="#全局的block" class="headerlink" title="全局的block"></a>全局的block</h2><p>前面已经提到过</p>
 <blockquote>
 <p><strong>在编译器完成编译之后，block会将其内部的代码全部提取出来，形成一个单独的C语言函数，在创建block时实际上它就是在方法声实现中声明一个结构体，并初始化该结构体的成员变量。而在执行block时，会去调用这个单独的C语言函数，并把该结构体的指针传递过去</strong></p>
@@ -565,7 +564,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">struct __main_block_impl_0 &#123;</span><br><span class="line">    struct __block_impl impl;</span><br><span class="line">    struct __main_block_desc_0* Desc;</span><br><span class="line">    int a;</span><br><span class="line">    __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int _a, int flags=0) : a(_a) &#123;</span><br><span class="line">        impl.isa = &amp;_NSConcreteStackBlock;</span><br><span class="line">        impl.Flags = flags;</span><br><span class="line">        impl.FuncPtr = fp;</span><br><span class="line">        Desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">static void __main_block_func_0(struct __main_block_impl_0 *__cself) &#123;</span><br><span class="line">    int a = __cself-&gt;a; // bound by copy</span><br><span class="line">    printf(&quot;%d\n&quot;, a);</span><br><span class="line">&#125;</span><br><span class="line">static struct __main_block_desc_0 &#123;</span><br><span class="line">    size_t reserved;</span><br><span class="line">    size_t Block_size;</span><br><span class="line">&#125; __main_block_desc_0_DATA = &#123; 0, sizeof(struct __main_block_impl_0)&#125;;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    int a = 100;</span><br><span class="line">    void (*block2)(void) = (void (*)())&amp;__main_block_impl_0((void *)__main_block_func_0, &amp;__main_block_desc_0_DATA, a);</span><br><span class="line">    ((void (*)(__block_impl *))((__block_impl *)block2)-&gt;FuncPtr)((__block_impl *)block2);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="堆中的block"><a href="#堆中的block" class="headerlink" title="堆中的block"></a>堆中的block</h2><blockquote>
-<p><strong>在栈中的block提到过，当函数调用结束，函数的调用栈会被销毁，那么栈中的block也会被销毁，但是我们一般都需要在函数结束之后任然使用这个block，suo’y所以就需要把栈中的block拷贝到堆上，在copy的同时，栈上的block的类型就转换成了堆上的block。</strong></p>
+<p><strong>在栈中的block提到过，当函数调用结束，函数的调用栈会被销毁，那么栈中的block也会被销毁，但是我们一般都需要在函数结束之后任然使用这个block，所以就需要把栈中的block拷贝到堆上，在copy的同时，栈上的block的类型就转换成了堆上的block。</strong></p>
 </blockquote>
 <blockquote>
 <p><strong>所以，在MRC时代，block的属性关键字必须是copy。这样就能保证再给block的属性复制的时候，能把栈上的block复制到堆上。</strong></p>
@@ -740,7 +739,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-count">9</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -759,7 +758,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">3</span>
+                      
+                    
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -902,7 +903,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2013 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2013 – <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-heart"></i>
   </span>
@@ -927,7 +928,7 @@
     
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
     
-    <span title="站点阅读时长">1:13</span>
+    <span title="站点阅读时长">1:14</span>
   
 </div>
 
