@@ -32,8 +32,8 @@
         <category>底层原理</category>
       </categories>
       <tags>
-        <tag>Block</tag>
         <tag>底层原理</tag>
+        <tag>Block</tag>
       </tags>
   </entry>
   <entry>
@@ -56,8 +56,8 @@
         <category>底层原理</category>
       </categories>
       <tags>
-        <tag>底层原理</tag>
         <tag>RunLoop</tag>
+        <tag>底层原理</tag>
       </tags>
   </entry>
   <entry>
@@ -68,9 +68,9 @@
         <category>底层原理</category>
       </categories>
       <tags>
-        <tag>底层原理</tag>
         <tag>Autorelease</tag>
         <tag>RunLoop</tag>
+        <tag>底层原理</tag>
       </tags>
   </entry>
   <entry>
