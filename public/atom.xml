@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://eziochiu.github.io/"/>
-  <updated>2020-09-11T10:04:05.131Z</updated>
+  <updated>2020-09-14T07:30:55.622Z</updated>
   <id>https://eziochiu.github.io/</id>
   
   <author>
@@ -17,13 +17,40 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>iOS Reveal2Loader修复版（iOS13修复）</title>
+    <link href="https://eziochiu.github.io/2020/09/14/iOS%20Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%88iOS13%E4%BF%AE%E5%A4%8D%EF%BC%89/"/>
+    <id>https://eziochiu.github.io/2020/09/14/iOS Reveal2Loader修复版（iOS13修复）/</id>
+    <published>2020-09-14T07:20:00.000Z</published>
+    <updated>2020-09-14T07:30:55.622Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;今天同事说这个插件在iOS13越狱下失效了，所以就修复了在iOS13下无法窥探的bug，把RevealLoader库也更新到了24，附带&lt;a href=&quot;https://www.macwk.com/soft/reveal&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Reveal24下载地址&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;修复后的Reveal源地址：&lt;a href=&quot;https://eziochiu.cn/cydia/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://eziochiu.cn/cydia/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。&lt;/del&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="越狱插件" scheme="https://eziochiu.github.io/categories/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
+    
+    
+      <category term="Reveal2Loader" scheme="https://eziochiu.github.io/tags/Reveal2Loader/"/>
+    
+      <category term="越狱插件" scheme="https://eziochiu.github.io/tags/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
+    
+  </entry>
+  
+  <entry>
     <title>如何利用RunLoop的知识来监测APP卡顿?</title>
     <link href="https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/"/>
     <id>https://eziochiu.github.io/2019/09/11/如何利用RunLoop的知识来监测APP卡顿/</id>
     <published>2019-09-11T09:50:48.000Z</published>
-    <updated>2020-09-11T10:04:05.131Z</updated>
+    <updated>2020-09-14T09:17:35.840Z</updated>
     
     <summary type="html">
+    
+      &lt;p&gt;卡顿问题，就是在主线程上无法响应用户交互的问题。如果一个 App 时不时地就给你卡一下，有时还长时间无响应，这时你还愿意继续用它吗？所以说，卡顿问题对 App 的伤害是巨大的&lt;/p&gt;
+&lt;h2 id&gt;&lt;a href=&quot;#&quot; class=&quot;headerlink&quot; title&gt;&lt;/a&gt;&lt;/h2&gt;
     
     </summary>
     
@@ -68,28 +95,6 @@
   </entry>
   
   <entry>
-    <title>iOS Reveal2Loader修复版</title>
-    <link href="https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88/"/>
-    <id>https://eziochiu.github.io/2019/02/25/iOS-Reveal2Loader修复版/</id>
-    <published>2019-02-25T03:59:00.000Z</published>
-    <updated>2019-03-18T12:48:52.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="越狱插件" scheme="https://eziochiu.github.io/categories/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
-    
-    
-      <category term="Reveal2Loader" scheme="https://eziochiu.github.io/tags/Reveal2Loader/"/>
-    
-      <category term="越狱插件" scheme="https://eziochiu.github.io/tags/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
-    
-  </entry>
-  
-  <entry>
     <title>iOS底层之Block</title>
     <link href="https://eziochiu.github.io/2018/06/22/iOS%E5%BA%95%E5%B1%82%E4%B9%8BBlock/"/>
     <id>https://eziochiu.github.io/2018/06/22/iOS底层之Block/</id>
@@ -117,6 +122,28 @@
   </entry>
   
   <entry>
+    <title>iOS底层之RunLoop</title>
+    <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/"/>
+    <id>https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/</id>
+    <published>2018-04-20T09:38:52.000Z</published>
+    <updated>2019-03-18T12:53:35.000Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自&lt;a href=&quot;http://blog.ibireme.com/2015/05/18/runloop/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;此博客&lt;/a&gt;。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+    
+      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
+    
+      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
     <title>iOS多线程编程之GCD(更新swift3.0用法)</title>
     <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8BGCD-%E6%9B%B4%E6%96%B0swift3-0%E7%94%A8%E6%B3%95/"/>
     <id>https://eziochiu.github.io/2018/04/20/iOS多线程编程之GCD-更新swift3-0用法/</id>
@@ -137,28 +164,6 @@
       <category term="多线程" scheme="https://eziochiu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     
       <category term="GCD" scheme="https://eziochiu.github.io/tags/GCD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>iOS底层之RunLoop</title>
-    <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/"/>
-    <id>https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/</id>
-    <published>2018-04-20T09:38:52.000Z</published>
-    <updated>2019-03-18T12:53:35.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自&lt;a href=&quot;http://blog.ibireme.com/2015/05/18/runloop/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;此博客&lt;/a&gt;。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
-    
-    
-      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
-    
-      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
