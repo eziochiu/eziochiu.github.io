@@ -146,13 +146,13 @@
 <meta property="og:site_name" content="eziochiu">
 <meta property="og:description" content="卡顿问题，就是在主线程上无法响应用户交互的问题。如果一个 App 时不时地就给你卡一下，有时还长时间无响应，这时你还愿意继续用它吗？所以说，卡顿问题对 App 的伤害是巨大的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eziochiu.github.io/.io//5f51c5e05085badb689f01b1e63e1c7d.png">
+<meta property="og:image" content="https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/5f51c5e05085badb689f01b1e63e1c7d.png">
 <meta property="article:published_time" content="2019-09-11T09:50:48.000Z">
-<meta property="article:modified_time" content="2023-07-21T08:14:38.545Z">
+<meta property="article:modified_time" content="2023-07-21T09:10:33.577Z">
 <meta property="article:author" content="eziochiu">
 <meta property="article:tag" content="RunLoop">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eziochiu.github.io/.io//5f51c5e05085badb689f01b1e63e1c7d.png">
+<meta name="twitter:image" content="https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/5f51c5e05085badb689f01b1e63e1c7d.png">
 
 
 
@@ -490,7 +490,7 @@
                 
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
-                <span title="阅读时长">27 分钟</span>
+                <span title="阅读时长">28 分钟</span>
               
             </div>
           
@@ -556,7 +556,7 @@
 <h3 id="RunLoop的六个状态"><a href="#RunLoop的六个状态" class="headerlink" title="RunLoop的六个状态"></a>RunLoop的六个状态</h3><figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="built_in">CF_OPTIONS</span>(<span class="built_in">CFOptionFlags</span>, <span class="built_in">CFRunLoopActivity</span>) &#123;</span><br><span class="line">    kCFRunLoopEntry = (<span class="number">1</span>UL &lt;&lt; <span class="number">0</span>),						<span class="comment">//即将进入RunLoop</span></span><br><span class="line">    kCFRunLoopBeforeTimers = (<span class="number">1</span>UL &lt;&lt; <span class="number">1</span>),		<span class="comment">//即将处理Timers</span></span><br><span class="line">    kCFRunLoopBeforeSources = (<span class="number">1</span>UL &lt;&lt; <span class="number">2</span>),		<span class="comment">//即将处理Source</span></span><br><span class="line">    kCFRunLoopBeforeWaiting = (<span class="number">1</span>UL &lt;&lt; <span class="number">5</span>),		<span class="comment">//即将休眠</span></span><br><span class="line">    kCFRunLoopAfterWaiting = (<span class="number">1</span>UL &lt;&lt; <span class="number">6</span>),		<span class="comment">//即将唤醒</span></span><br><span class="line">    kCFRunLoopExit = (<span class="number">1</span>UL &lt;&lt; <span class="number">7</span>),						<span class="comment">//退出RunLoop</span></span><br><span class="line">    kCFRunLoopAllActivities = <span class="number">0x0FFFFFFF</span>U</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>用一张图概括RunLoop的运行轨迹</p>
-<p><img src="/.io//5f51c5e05085badb689f01b1e63e1c7d.png" alt="runloop"></p>
+<p><img src="/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/5f51c5e05085badb689f01b1e63e1c7d.png" alt="runloop"></p>
 <h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>通过上面的runloop运行轨迹我们能够知道，RunLoop&#96;处理事件的时间主要出在两个阶段：</p>
 <ul>
 <li><code>kCFRunLoopBeforeSources</code>和<code>kCFRunLoopBeforeWaiting</code>之间</li>
@@ -1469,6 +1469,6 @@
   <script type="text/javascript" src="/js/src/custom.js"></script>
 
   <!-- 宠物 -->
-  
+  <!--  -->
 </body>
 </html>

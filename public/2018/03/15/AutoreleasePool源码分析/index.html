@@ -146,15 +146,15 @@
 <meta property="og:site_name" content="eziochiu">
 <meta property="og:description" content="AutoreleasePool（自动释放池）是OC中的一种内存自动回收机制，它可以延迟加入AutoreleasePool中的变量release的时机。在正常情况下，创建的变量会在超出其作用域的时候release，但是如果将变量加入AutoreleasePool，那么release将延迟执行。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eziochiu.github.io/.io//%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png">
+<meta property="og:image" content="https://eziochiu.github.io/2018/03/15/AutoreleasePool%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png">
 <meta property="article:published_time" content="2018-03-15T02:53:48.000Z">
-<meta property="article:modified_time" content="2023-07-21T08:14:38.538Z">
+<meta property="article:modified_time" content="2023-07-21T09:10:33.567Z">
 <meta property="article:author" content="eziochiu">
 <meta property="article:tag" content="Autorelease">
 <meta property="article:tag" content="RunLoop">
 <meta property="article:tag" content="底层原理">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eziochiu.github.io/.io//%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png">
+<meta name="twitter:image" content="https://eziochiu.github.io/2018/03/15/AutoreleasePool%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png">
 
 
 
@@ -561,7 +561,7 @@
 <p>那么这就衍生了一个问题，如果AutoreleasePoolPage在添加需要释放的对象的地址超过了4096的空间或者是说有多个AutoreleasePoolPage的时候它是如何存入需要释放对象的地址，又是如何一层一层的释放的呢？</p>
 <h1 id="AutoreleasePoolPage双向链表"><a href="#AutoreleasePoolPage双向链表" class="headerlink" title="AutoreleasePoolPage双向链表"></a>AutoreleasePoolPage双向链表</h1><p>其实AutoreleasePoolPage并没有单独的结构，而是由若干个AutoreleasePoolPage以双向链表的形式组合而成的栈结构在AutoreleasePoolPage的成员变量内部，我们可以清晰的看到有两个成员变量：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AutoreleasePoolPage * const parent; //指向上一个AutoreleasePoolPage</span><br><span class="line">AutoreleasePoolPage *child; //指向下一个AutoreleasePoolPage</span><br></pre></td></tr></table></figure>
-<p>parent指针和child指针，parent指向的上一个AutoreleasePoolPage的内存空间地址而child则指向下一个AutoreleasePoolPage的内存地址，当一个AutoreleasePoolPage的空间被占满时，会新建一个AutoreleasePoolPage对象，连接链表，后来的autorelease对象在新的page加入。这样无论在添加autorelease对象地址和释放autorelease对象地址的时候都能很准确的找到对应的AutoreleasePoolPage的地址<br><img src="/.io//%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png" alt="双向链表"></p>
+<p>parent指针和child指针，parent指向的上一个AutoreleasePoolPage的内存空间地址而child则指向下一个AutoreleasePoolPage的内存地址，当一个AutoreleasePoolPage的空间被占满时，会新建一个AutoreleasePoolPage对象，连接链表，后来的autorelease对象在新的page加入。这样无论在添加autorelease对象地址和释放autorelease对象地址的时候都能很准确的找到对应的AutoreleasePoolPage的地址<br><img src="/2018/03/15/AutoreleasePool%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png" alt="双向链表"></p>
 <p>具体查看AutoreleasePoolPage的工作原理，可以用_objc_autoreleasePoolPrint这个私有函数来查看</p>
 <h1 id="Runloop和AutoreleasePool的关系"><a href="#Runloop和AutoreleasePool的关系" class="headerlink" title="Runloop和AutoreleasePool的关系"></a>Runloop和AutoreleasePool的关系</h1><p>我们新建一个空的工程，在viewDidLoad打印[NSRunLoop mainRunLoop]的详细信息，我们会在observers发现两个关于AutoreleasePool的Handler操作_wrapRunLoopWithAutoreleasePoolHandler：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">observers = (</span><br><span class="line">    &quot;&lt;CFRunLoopObserver 0x600001f68140 [0x1053f6b68]&gt;&#123;valid = Yes, activities = 0x1, repeats = Yes, order = -2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x107fe51b1), context = &lt;CFArray 0x600002020330 [0x1053f6b68]&gt;&#123;type = mutable-small, count = 1, values = (\n\t0 : &lt;0x7ff476808058&gt;\n)&#125;&#125;&quot;,</span><br><span class="line">    &quot;&lt;CFRunLoopObserver 0x600001f6c1e0 [0x1053f6b68]&gt;&#123;valid = Yes, activities = 0x20, repeats = Yes, order = 0, callout = _UIGestureRecognizerUpdateObserver (0x107bb7473), context = &lt;CFRunLoopObserver context 0x60000056dea0&gt;&#125;&quot;,</span><br><span class="line">    &quot;&lt;CFRunLoopObserver 0x600001f68c80 [0x1053f6b68]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 1999000, callout = _beforeCACommitHandler (0x108014dfc), context = &lt;CFRunLoopObserver context 0x7ff475d024b0&gt;&#125;&quot;,</span><br><span class="line">    &quot;&lt;CFRunLoopObserver 0x600001f68960 [0x1053f6b68]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2000000, callout = _ZN2CA11Transaction17observer_callbackEP19__CFRunLoopObservermPv (0x109a136ae), context = &lt;CFRunLoopObserver context 0x0&gt;&#125;&quot;,</span><br><span class="line">    &quot;&lt;CFRunLoopObserver 0x600001f68be0 [0x1053f6b68]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2001000, callout = _afterCACommitHandler (0x108014e75), context = &lt;CFRunLoopObserver context 0x7ff475d024b0&gt;&#125;&quot;,</span><br><span class="line">    &quot;&lt;CFRunLoopObserver 0x600001f68b40 [0x1053f6b68]&gt;&#123;valid = Yes, activities = 0xa0, repeats = Yes, order = 2147483647, callout = _wrapRunLoopWithAutoreleasePoolHandler (0x107fe51b1), context = &lt;CFArray 0x600002020330 [0x1053f6b68]&gt;&#123;type = mutable-small, count = 1, values = (\n\t0 : &lt;0x7ff476808058&gt;\n)&#125;&#125;&quot;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
@@ -1459,6 +1459,6 @@
   <script type="text/javascript" src="/js/src/custom.js"></script>
 
   <!-- 宠物 -->
-  
+  <!--  -->
 </body>
 </html>

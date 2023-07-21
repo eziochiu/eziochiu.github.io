@@ -36,6 +36,6 @@ banner_img:
 
 enjoy！！！
 
-<div style="width: 900px; margin: auto">![样例](QQ20190225-124715@2x.png)</div>
+![样例](QQ20190225-124715@2x.png)
 
-<div style="width: 900px; margin: auto">![样例](QQ20190225-124731@2x.png)</div>
+![样例](QQ20190225-124731@2x.png)

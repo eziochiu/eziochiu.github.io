@@ -6,7 +6,7 @@
   <link href="https://eziochiu.github.io/atom.xml" rel="self"/>
   
   <link href="https://eziochiu.github.io/"/>
-  <updated>2023-07-21T08:14:38.539Z</updated>
+  <updated>2023-07-21T09:50:08.170Z</updated>
   <id>https://eziochiu.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://eziochiu.github.io/2020/09/14/iOS%20Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%88iOS13%E4%BF%AE%E5%A4%8D%EF%BC%89/"/>
     <id>https://eziochiu.github.io/2020/09/14/iOS%20Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%88iOS13%E4%BF%AE%E5%A4%8D%EF%BC%89/</id>
     <published>2020-09-14T07:20:00.000Z</published>
-    <updated>2023-07-21T08:14:38.539Z</updated>
+    <updated>2023-07-21T09:50:08.170Z</updated>
     
     
     <summary type="html">&lt;p&gt;今天同事说这个插件在iOS13越狱下失效了，所以就修复了在iOS13下无法窥探的bug，把RevealLoader库也更新到了24，附带&lt;a href=&quot;https://www.macwk.com/soft/reveal&quot;&gt;Reveal24下载地址&lt;/a&gt;。&lt;/p&gt;
@@ -44,7 +44,7 @@
     <link href="https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/"/>
     <id>https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/</id>
     <published>2019-09-11T09:50:48.000Z</published>
-    <updated>2023-07-21T08:14:38.545Z</updated>
+    <updated>2023-07-21T09:10:33.577Z</updated>
     
     
     <summary type="html">&lt;p&gt;卡顿问题，就是在主线程上无法响应用户交互的问题。如果一个 App 时不时地就给你卡一下，有时还长时间无响应，这时你还愿意继续用它吗？所以说，卡顿问题对 App 的伤害是巨大的&lt;/p&gt;
@@ -64,7 +64,7 @@
     <link href="https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/"/>
     <id>https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/</id>
     <published>2019-03-12T06:27:27.000Z</published>
-    <updated>2023-07-21T08:14:38.545Z</updated>
+    <updated>2023-07-21T09:10:33.576Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;总起&quot;&gt;&lt;a href=&quot;#总起&quot; class=&quot;headerlink&quot; title=&quot;总起&quot;&gt;&lt;/a&gt;总起&lt;/h1&gt;&lt;p&gt;OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。&lt;/p&gt;
@@ -96,7 +96,7 @@
     <link href="https://eziochiu.github.io/2018/06/22/iOS%E5%BA%95%E5%B1%82%E4%B9%8BBlock/"/>
     <id>https://eziochiu.github.io/2018/06/22/iOS%E5%BA%95%E5%B1%82%E4%B9%8BBlock/</id>
     <published>2018-06-22T10:38:52.000Z</published>
-    <updated>2023-07-21T08:14:38.543Z</updated>
+    <updated>2023-07-21T09:10:33.574Z</updated>
     
     
     <summary type="html">&lt;ul&gt;
@@ -123,7 +123,7 @@
     <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8BGCD-%E6%9B%B4%E6%96%B0swift3-0%E7%94%A8%E6%B3%95/"/>
     <id>https://eziochiu.github.io/2018/04/20/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8BGCD-%E6%9B%B4%E6%96%B0swift3-0%E7%94%A8%E6%B3%95/</id>
     <published>2018-04-20T09:38:52.000Z</published>
-    <updated>2023-07-21T08:14:38.543Z</updated>
+    <updated>2023-07-21T09:10:33.573Z</updated>
     
     
     <summary type="html">&lt;blockquote&gt;
@@ -146,7 +146,7 @@
     <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/"/>
     <id>https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/</id>
     <published>2018-04-20T09:38:52.000Z</published>
-    <updated>2023-07-21T08:14:38.543Z</updated>
+    <updated>2023-07-21T09:10:33.574Z</updated>
     
     
     <summary type="html">&lt;p&gt;runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自&lt;a href=&quot;http://blog.ibireme.com/2015/05/18/runloop/&quot;&gt;此博客&lt;/a&gt;。&lt;/p&gt;</summary>
@@ -167,7 +167,7 @@
     <link href="https://eziochiu.github.io/2018/03/15/AutoreleasePool%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
     <id>https://eziochiu.github.io/2018/03/15/AutoreleasePool%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</id>
     <published>2018-03-15T02:53:48.000Z</published>
-    <updated>2023-07-21T08:14:38.538Z</updated>
+    <updated>2023-07-21T09:10:33.567Z</updated>
     
     
     <summary type="html">&lt;blockquote&gt;
@@ -192,7 +192,7 @@
     <link href="https://eziochiu.github.io/2017/04/11/Notification%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     <id>https://eziochiu.github.io/2017/04/11/Notification%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/</id>
     <published>2017-04-11T09:38:52.000Z</published>
-    <updated>2023-07-21T08:14:38.539Z</updated>
+    <updated>2023-07-21T09:10:33.569Z</updated>
     
     
     <summary type="html">&lt;blockquote&gt;
@@ -215,7 +215,7 @@
     <link href="https://eziochiu.github.io/2017/02/24/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E9%94%81/"/>
     <id>https://eziochiu.github.io/2017/02/24/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E9%94%81/</id>
     <published>2017-02-24T10:04:15.000Z</published>
-    <updated>2023-07-21T08:14:38.543Z</updated>
+    <updated>2023-07-21T09:10:33.573Z</updated>
     
     
     <summary type="html">&lt;h1 id=&quot;何所谓线程安全&quot;&gt;&lt;a href=&quot;#何所谓线程安全&quot; class=&quot;headerlink&quot; title=&quot;何所谓线程安全&quot;&gt;&lt;/a&gt;何所谓线程安全&lt;/h1&gt;&lt;p&gt;线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。&lt;/p&gt;

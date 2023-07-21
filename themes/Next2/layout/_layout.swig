@@ -136,6 +136,6 @@
   <script type="text/javascript" src="/js/src/custom.js"></script>
 
   <!-- 宠物 -->
-  {{ live2d() }}
+  <!-- {{ live2d() }} -->
 </body>
 </html>

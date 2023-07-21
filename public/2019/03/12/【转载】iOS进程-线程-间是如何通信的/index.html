@@ -146,14 +146,14 @@
 <meta property="og:site_name" content="eziochiu">
 <meta property="og:description" content="总起OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。 上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。 由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）  Mach P">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eziochiu.github.io/.io//articlex.png">
+<meta property="og:image" content="https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/articlex.png">
 <meta property="article:published_time" content="2019-03-12T06:27:27.000Z">
-<meta property="article:modified_time" content="2023-07-21T08:14:38.545Z">
+<meta property="article:modified_time" content="2023-07-21T09:10:33.576Z">
 <meta property="article:author" content="eziochiu">
 <meta property="article:tag" content="底层原理">
 <meta property="article:tag" content="转载">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://eziochiu.github.io/.io//articlex.png">
+<meta name="twitter:image" content="https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/articlex.png">
 
 
 
@@ -639,7 +639,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;key&gt;LaunchEvents&lt;/key&gt;</span><br><span class="line">&lt;dict&gt;</span><br><span class="line">  &lt;key&gt;com.apple.iokit.matching&lt;/key&gt;</span><br><span class="line">  &lt;dict&gt;</span><br><span class="line">      &lt;key&gt;com.example.device-attach&lt;/key&gt;</span><br><span class="line">      &lt;dict&gt;</span><br><span class="line">          &lt;key&gt;idProduct&lt;/key&gt;</span><br><span class="line">          &lt;integer&gt;2794&lt;/integer&gt;</span><br><span class="line">          &lt;key&gt;idVendor&lt;/key&gt;</span><br><span class="line">          &lt;integer&gt;725&lt;/integer&gt;</span><br><span class="line">          &lt;key&gt;IOProviderClass&lt;/key&gt;</span><br><span class="line">          &lt;string&gt;IOUSBDevice&lt;/string&gt;</span><br><span class="line">          &lt;key&gt;IOMatchLaunchStream&lt;/key&gt;</span><br><span class="line">          &lt;true/&gt;</span><br><span class="line">          &lt;key&gt;ProcessType&lt;/key&gt;</span><br><span class="line">          &lt;string&gt;Adaptive&lt;/string&gt;</span><br><span class="line">      &lt;/dict&gt;</span><br><span class="line">  &lt;/dict&gt;</span><br><span class="line">&lt;/dict&gt;</span><br></pre></td></tr></table></figure>
 
 <p>最近一次对于launchd属性列表的修改是增加了ProcessType Key，其用来在高级层面上描述启动机构的预期目的。根据预描述行为期望，操作系统会响应调整CPU和I&#x2F;O的阈值。</p>
-<p><img src="/.io//articlex.png" alt="图片描述"></p>
+<p><img src="/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/articlex.png" alt="图片描述"></p>
 <p>为了注册一个服务运行大概五分钟的时间，一套标准需要传送给xpc_activity_register：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">xpc_object_t criteria = xpc_dictionary_create(NULL, NULL, 0);</span><br><span class="line">xpc_dictionary_set_int64(criteria, XPC_ACTIVITY_INTERVAL, 5 * 60);</span><br><span class="line">xpc_dictionary_set_int64(criteria, XPC_ACTIVITY_GRACE_PERIOD, 10 * 60);</span><br><span class="line"></span><br><span class="line">xpc_activity_register(&quot;com.example.app.activity&quot;,</span><br><span class="line">                      criteria,</span><br><span class="line">                      ^(xpc_activity_t activity)</span><br><span class="line">&#123;</span><br><span class="line">    // Process Data</span><br><span class="line"></span><br><span class="line">    xpc_activity_set_state(activity, XPC_ACTIVITY_STATE_CONTINUE);</span><br><span class="line"></span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        // Update UI</span><br><span class="line"></span><br><span class="line">        xpc_activity_set_state(activity, XPC_ACTIVITY_STATE_DONE);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
@@ -666,7 +666,7 @@
   <p><span>文章作者:</span><a href="/" title="访问  的个人博客"></a></p>
   <p><span>发布时间:</span>2019年03月12日 - 14:03</p>
   
-    <p><span>最后更新:</span>2023年07月21日 - 16:07</p>
+    <p><span>最后更新:</span>2023年07月21日 - 17:07</p>
   
   <p><span>原始链接:</span><a href="/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/" title="【转载】iOS进程间是如何通信的">https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/"  aria-label="复制成功！"></i></span>
@@ -1563,6 +1563,6 @@
   <script type="text/javascript" src="/js/src/custom.js"></script>
 
   <!-- 宠物 -->
-  
+  <!--  -->
 </body>
 </html>
