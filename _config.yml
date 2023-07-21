@@ -179,7 +179,7 @@ tag_generator:
 # 部署到github
 deploy:
   type: git
-  repository: https://github.com/eziochiu/eziochiu.github.io.git
+  repository: git@github.com:eziochiu/eziochiu.github.io.git
   branch: master
 
 # leancloud_counter_security:
