@@ -494,6 +494,150 @@
       </tags>
   </entry>
   <entry>
+    <title>【转载】iOS进程间是如何通信的</title>
+    <url>/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/</url>
+    <content><![CDATA[<h1 id="总起"><a href="#总起" class="headerlink" title="总起"></a>总起</h1><p>OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。</p>
+<p>上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。</p>
+<p>由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）</p>
+<ul>
+<li>Mach Ports</li>
+<li>Distributed Notifications</li>
+<li>Distributed Objects</li>
+<li>AppleEvents &amp; AppleScript</li>
+<li>Pasteboard</li>
+<li>XPC</li>
+</ul>
+<p>从低级内核抽象到高级，面向对象的API，它们都有各自特殊的表现以及安全特性。但是基础层面来看，它们都是从不同上下文段传递或者获取数据的机制。</p>
+<span id="more"></span>
+
+<p><a href="https://nshipster.com/inter-process-communication/">原文链接</a>    <a href="https://segmentfault.com/a/1190000002400329">转载自此处</a></p>
+<h1 id="Mach-Ports"><a href="#Mach-Ports" class="headerlink" title="Mach Ports"></a>Mach Ports</h1><p>所有的进程间通讯最终落实依赖的还是Mach内核API提供的功能。</p>
+<p>Mach端口是轻量并且强大的而又缺少相关文档晦涩使用的（天使与恶魔）。</p>
+<p>通过一个Mach端口发送一个消息调用一次mach_msg_send方法，但是这里需要做一些配置来构建待发送的消息：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">natural_t data;</span><br><span class="line">mach_port_t port;</span><br><span class="line"></span><br><span class="line">struct &#123;</span><br><span class="line">    mach_msg_header_t header;</span><br><span class="line">    mach_msg_body_t body;</span><br><span class="line">    mach_msg_type_descriptor_t type;</span><br><span class="line">&#125; message;</span><br><span class="line"></span><br><span class="line">message.header = (mach_msg_header_t) &#123;</span><br><span class="line">    .msgh_remote_port = port,</span><br><span class="line">    .msgh_local_port = MACH_PORT_NULL,</span><br><span class="line">    .msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, 0),</span><br><span class="line">    .msgh_size = sizeof(message)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">message.body = (mach_msg_body_t) &#123;</span><br><span class="line">    .msgh_descriptor_count = 1</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">message.type = (mach_msg_type_descriptor_t) &#123;</span><br><span class="line">    .pad1 = data,</span><br><span class="line">    .pad2 = sizeof(data)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">mach_msg_return_t error = mach_msg_send(&amp;message.header);</span><br><span class="line"></span><br><span class="line">if (error == MACH_MSG_SUCCESS) &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（消息）接收端稍微轻松点，因为消息只需要被声明而不用初始化：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mach_port_t port;</span><br><span class="line"></span><br><span class="line">struct &#123;</span><br><span class="line">    mach_msg_header_t header;</span><br><span class="line">    mach_msg_body_t body;</span><br><span class="line">    mach_msg_type_descriptor_t type;</span><br><span class="line">    mach_msg_trailer_t trailer;</span><br><span class="line">&#125; message;</span><br><span class="line"></span><br><span class="line">mach_msg_return_t error = mach_msg_receive(&amp;message.header);</span><br><span class="line"></span><br><span class="line">if (error == MACH_MSG_SUCCESS) &#123;</span><br><span class="line">    natural_t data = message.type.pad1;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还算不错的是，Core Foundation和Foundation为Mach端口提供了高级API。在内核基础上封装的CFMachPort &#x2F; NSMachPort可以用做runloop源，尽管CFMachPort &#x2F; NSMachPort有利于的是两个不同端口之间的通讯同步。</p>
+<p>CFMessagePort确实非常适合用于简单的一对一通讯。简简单单几行代码，一个本地端口就被附属到runloop源上，只要获取到消息就执行回调。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">static CFDataRef Callback(CFMessagePortRef port,</span><br><span class="line">                          SInt32 messageID,</span><br><span class="line">                          CFDataRef data,</span><br><span class="line">                          void *info)</span><br><span class="line">&#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CFMessagePortRef localPort =</span><br><span class="line">    CFMessagePortCreateLocal(nil,</span><br><span class="line">                             CFSTR(&quot;com.example.app.port.server&quot;),</span><br><span class="line">                             Callback,</span><br><span class="line">                             nil,</span><br><span class="line">                             nil);</span><br><span class="line"></span><br><span class="line">CFRunLoopSourceRef runLoopSource =</span><br><span class="line">    CFMessagePortCreateRunLoopSource(nil, localPort, 0);</span><br><span class="line"></span><br><span class="line">CFRunLoopAddSource(CFRunLoopGetCurrent(),</span><br><span class="line">                   runLoopSource,</span><br><span class="line">                   kCFRunLoopCommonModes);</span><br></pre></td></tr></table></figure>
+
+<p>若要进行发送数据同样也十分直截了当。只要完成指定远端的端口，装载数据，还有设置发送与接收的超时时间的操作。剩下就由CFMessagePortSendRequest来接管了。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CFDataRef data;</span><br><span class="line">SInt32 messageID = 0x1111; // Arbitrary</span><br><span class="line">CFTimeInterval timeout = 10.0;</span><br><span class="line"></span><br><span class="line">CFMessagePortRef remotePort =</span><br><span class="line">    CFMessagePortCreateRemote(nil,</span><br><span class="line">                              CFSTR(&quot;com.example.app.port.client&quot;));</span><br><span class="line"></span><br><span class="line">SInt32 status =</span><br><span class="line">    CFMessagePortSendRequest(remotePort,</span><br><span class="line">                             messageID,</span><br><span class="line">                             data,</span><br><span class="line">                             timeout,</span><br><span class="line">                             timeout,</span><br><span class="line">                             NULL,</span><br><span class="line">                             NULL);</span><br><span class="line">if (status == kCFMessagePortSuccess) &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="Distributed-Notifications"><a href="#Distributed-Notifications" class="headerlink" title="Distributed Notifications"></a>Distributed Notifications</h1><p>在Cocoa中有很多种两个对象进行通信的途径。</p>
+<p>当然也能进行直接消息传递。也有像目标-动作，代理，回调这些解耦，一对一的设计模式。KVO允许让很多对象订阅一个事件，但是它把这些对象都联系起来了。另一方面通知让消息全局广播，并且让有监听该广播的对象接收该消息。【注：想知道发了多少次广播吗？添加 NSNotificationCenter addObserverForName:object:queue:usingBlock，其中name与object置nil，看block被调用了几次。】</p>
+<p>每个应用为基础应用消息发布-订阅对自身通知中心实例进行管理。但是鲜有人知的APICFNotificationCenterGetDistributedCenter的通知可以进行系统级别范围的通信。</p>
+<p>为了获取通知，添加所要指定监听消息名的观察者到通知发布中心，当消息接收到的时候函数指针指向的函数将被执行一次：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">static void Callback(CFNotificationCenterRef center,</span><br><span class="line">                     void *observer,</span><br><span class="line">                     CFStringRef name,</span><br><span class="line">                     const void *object,</span><br><span class="line">                     CFDictionaryRef userInfo)</span><br><span class="line">&#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CFNotificationCenterRef distributedCenter =</span><br><span class="line">    CFNotificationCenterGetDistributedCenter();</span><br><span class="line"></span><br><span class="line">CFNotificationSuspensionBehavior behavior =</span><br><span class="line">        CFNotificationSuspensionBehaviorDeliverImmediately;</span><br><span class="line"></span><br><span class="line">CFNotificationCenterAddObserver(distributedCenter,</span><br><span class="line">                                NULL,</span><br><span class="line">                                Callback,</span><br><span class="line">                                CFSTR(&quot;notification.identifier&quot;),</span><br><span class="line">                                NULL,</span><br><span class="line">                                behavior);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>发送端代码更为简单，只要配置好ID,对象还有user info：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void *object;</span><br><span class="line">CFDictionaryRef userInfo;</span><br><span class="line"></span><br><span class="line">CFNotificationCenterRef distributedCenter =</span><br><span class="line">    CFNotificationCenterGetDistributedCenter();</span><br><span class="line"></span><br><span class="line">CFNotificationCenterPostNotification(distributedCenter,</span><br><span class="line">                                     CFSTR(&quot;notification.identifier&quot;),</span><br><span class="line">                                     object,</span><br><span class="line">                                     userInfo,</span><br><span class="line">                                     true);</span><br></pre></td></tr></table></figure>
+
+<p>链接两个应用通信的方式中，分发式通知是最为简单的。用它来进行大量数据的传输是不明智的，但是对于轻量级信息同步，分发式通知堪称完美。</p>
+<h1 id="Distributed-Objects"><a href="#Distributed-Objects" class="headerlink" title="Distributed Objects"></a>Distributed Objects</h1><p>90年代中NeXT全盛时期，分发式对象（DO）是Cocoa框架中一个远程消息发送特性。尽管现在已经不再大范围的使用，在现代奇数层上IPC无障碍通信仍然并未实现。</p>
+<p>使用DO分发一个对象仅仅是搭建一个NSConnection并将其注册为特殊（你分的清楚）的名字：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@protocol Protocol;</span><br><span class="line"></span><br><span class="line">id &lt;Protocol&gt; vendedObject;</span><br><span class="line"></span><br><span class="line">NSConnection *connection = [[NSConnection alloc] init];</span><br><span class="line">[connection setRootObject:vendedObject];</span><br><span class="line">[connection registerName:@&quot;server&quot;];</span><br></pre></td></tr></table></figure>
+
+<p>另外一个应用将会也建立同样名字的并注册过的链接，然后立即获取一个原子代理当做原始对象。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:@&quot;server&quot; host:nil];</span><br><span class="line">[proxy setProtocolForProxy:@protocol(Protocol)];</span><br></pre></td></tr></table></figure>
+
+<p>只要分发对象代理收到消息了，一个通过NSConnection连接远程调用（RPC）将会根据发送对象进行对应的计算并且返回结果给代理。【注：原理是一个OS管理的共享的NSPortNameServer实例对这个带着名字的连接进行管控。】</p>
+<p>分发式对象简单，透明，健壮。简直就是Cocoa中的标杆。。。</p>
+<p>实际上，分布式对象不能像局部对象那样使用，那就是因为任何发送给代理的消息都可能抛出异常。不想其他语言，OC没有异常处理控制流程。所以对任何东西都进行@try&#x2F;@catch也算是Cocoa大会很凄凉的补救了。</p>
+<p>DO还有一个原因致其使用不便。在试图通过连接“marshal values”时，对象和原语的差距尤为明显。<br>此外，连接是完全加密的，和下方通信信道扩展性的缺乏致使其在大多数的使用中通信被迫中断。</p>
+<p>下方是左列分布式对象用来指定其属性代理行为和方法参数的注解：</p>
+<ul>
+<li>in：输入参数，后续不再引用</li>
+<li>out：参数被引用作为返回值</li>
+<li>inout：输入参数，引用作为返回值</li>
+<li>const：常量参数</li>
+<li>oneway：无障碍结果返回</li>
+<li>bycopy：返回对象的拷贝</li>
+<li>byref：返回对象的代理</li>
+</ul>
+<h1 id="AppleEvents-AppleScript"><a href="#AppleEvents-AppleScript" class="headerlink" title="AppleEvents &amp; AppleScript"></a>AppleEvents &amp; AppleScript</h1><p>AppleEvents是经典Macintosh操作系统最持久的遗产。在System 7推出的AppleEvents允许应用程序在本地使用AppleScript或者使用程序链接的功能进行程序控制。现在AppleScript使用Cocoa Scripting Bridge，仍然是OS X应用进程间最直接的交互方式。【注：Mac系统的苹果时间管理中心为AppleEvents提供了原始低级传送机制，但是是在OS X的Mach端口基础之上的重实现】。</p>
+<p>也就是说，使用起来这是简单而又古怪的技术之一。</p>
+<p>AppleScript使用自然语言语法，设计初衷是没有涉及参数而更容易掌握。虽然与人交流更亲和了，但是写起来确实噩梦。</p>
+<p>为了更好的了解人类自然性，这里有个栗子教你怎么让Safari在最前的窗口的激活栏打开一个URL。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tell application &quot;Safari&quot;</span><br><span class="line">  set the URL of the front document to &quot;http://nshipster.com&quot;</span><br><span class="line">end tell</span><br></pre></td></tr></table></figure>
+
+<p>在大部分情况下，AppleScript的语法自然语言的特性更多是不便不是优势。（吐槽。。。略略略）</p>
+<p>即便是经验老道的OC开发者，不靠文档或者栗子写出AppleScript是不可能的任务。</p>
+<p>幸运的是，Scripting Bridge为Cocoa应用提供了更友善的编程接口。</p>
+<h1 id="Cocoa-Scripting-Bridge"><a href="#Cocoa-Scripting-Bridge" class="headerlink" title="Cocoa Scripting Bridge"></a>Cocoa Scripting Bridge</h1><p>为了使用Scripting Bridge与应用进行交互，首先要先添加一个编程接口：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sdef /Applications/Safari.app | sdp -fh --basename Safari</span><br></pre></td></tr></table></figure>
+
+<p>sdef为应用生成脚本定义文件。这些文件可以以管道输入道sdp并格式转成（在这里是）C头文件。这样的结果是添加该头文件到应用工程并提供第一类对象接口。</p>
+<p>这里举个栗子来解释如何使用Cocoa Scripting Bridge：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#import &quot;Safari.h&quot;</span><br><span class="line"></span><br><span class="line">SafariApplication *safari = [SBApplication applicationWithBundleIdentifier:@&quot;com.apple.Safari&quot;];</span><br><span class="line"></span><br><span class="line">for (SafariWindow *window in safari.windows) &#123;</span><br><span class="line">    if (window.visible) &#123;</span><br><span class="line">        window.currentTab.URL = [NSURL URLWithString:@&quot;http://nshipster.com&quot;];</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对比AppleScript上面显得冗繁了点，但是却更容易集成到已存在的代码中去。在可读性上更优因为毕竟长得更像OC。</p>
+<p>唉，AppleScript的星芒也正出现消退，在最近发布的OS X与iWork应用证答复减少它的戏份。从这点说，未必值得在你的应用中去添加这项（脚本）支持。</p>
+<h1 id="Pasteboard"><a href="#Pasteboard" class="headerlink" title="Pasteboard"></a>Pasteboard</h1><p>剪贴板是OS X与iOS最常见的进程间通信机制。当用户跨应用拷贝了一段文字，图片，文档，这时候通过mach port的com.apple.pboard服务媒介进行从一个进程到另一个进程的数据交换。</p>
+<p>OS X上是NSPasteboard，iOS上对应的是UIPasteboard。它们几乎是别无二致，但尽管大致一样，对比OS X iOS上提供了更简洁，更现代化却又不影响功效的API。</p>
+<p>编写剪贴板代码几乎就跟在GUI应用上使用Edit &gt; Copy操作一样简单：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NSImage *image;</span><br><span class="line"></span><br><span class="line">NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];</span><br><span class="line">[pasteboard clearContents];</span><br><span class="line">[pasteboard writeObjects:@[image]];</span><br></pre></td></tr></table></figure>
+
+<p>因为剪贴动作太频繁了，所以要确认剪贴内容是否是你（应用）所需要得：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];</span><br><span class="line"></span><br><span class="line">if ([pasteboard canReadObjectForClasses:@[[NSImage class]] options:nil]) &#123;</span><br><span class="line">    NSArray *contents = [pasteboard readObjectsForClasses:@[[NSImage class]] options: nil];</span><br><span class="line">    NSImage *image = [contents firstObject];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="XPC"><a href="#XPC" class="headerlink" title="XPC"></a>XPC</h1><p>XPC是SDK中最先进的进程间通讯技术。它架构之初的目的在于避免长时间得运行过程，来适应有限的资源，在可能运行的时候才进行初始化。把XPC纳入应用而不做任何事情的想法是不现实的，但这样提供了更好的进程间的特权分离和故障隔离。</p>
+<p>XPC作为NSTask替代品甚至更多。</p>
+<p>2011推出以来，XPC为OS X上的应用沙盒提供基础设施，iOS上的远程试图控制器，还有两个平台上的应用扩展。它还广范围的用在系统框架和第一方应用：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ find /Applications -name \*.xpc</span><br></pre></td></tr></table></figure>
+
+<p>控制台输入上面的命令行你会知道XPC无处不在。在一般应用中同样的情形也在发生，比如图片或者视频转变服务，系统调用，网页服务加载，或是第三方的授权。</p>
+<p>XPC负责进程间通讯的同时还负责该服务生命周期的管理。包括注册服务，启动，以及通过launchd解决服务之间的通讯。一个XPC服务可以根据需求地洞，或者在崩溃的时候重启，或者是空闲的时候终止。正因如此，服务可以完全被设计成无状态的，以便于在运行的任何时间点的突然终止都能做到影响不大。</p>
+<p>作为被iOS还有OS X中backported所采用的安全模块，XPC服务默认运行在最为严格的环境：不能访问文件，不能访问网络，没有根权限升级。任何能做的事情就是对照被赋予的白名单列表。</p>
+<p>XPC可以被libxpc C API访问，或者是NSXPCConnection OC API。【注：作者会用低级API去实现（纯C）】</p>
+<p>XPC服务要么存在于应用的沙盒中亦或是使用launchd调用跑在后台。</p>
+<p>服务调用带事件句柄的xpc_main来获取新的XPC连接。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">static void connection_handler(xpc_connection_t peer) &#123;</span><br><span class="line">    xpc_connection_set_event_handler(peer, ^(xpc_object_t event) &#123;</span><br><span class="line">        peer_event_handler(peer, event);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    xpc_connection_resume(peer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char *argv[]) &#123;</span><br><span class="line">   xpc_main(connection_handler);</span><br><span class="line">   exit(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每个XPC连接是一对一的，意味着服务在不同的连接进行操作，每次调用xpc_connection_create就会创建一个新的链接。【注：类似BSD套接字中的API accept函数，服务在单个文件描述符进行监听来为范围内的链接创建额外描述符】：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xpc_connection_t c = xpc_connection_create(&quot;com.example.service&quot;, NULL);</span><br><span class="line">xpc_connection_set_event_handler(c, ^(xpc_object_t event) &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;);</span><br><span class="line">xpc_connection_resume(c);</span><br></pre></td></tr></table></figure>
+
+<p>当一个消息发送到XPC链接，将自动的派发到一个由runtime管理的消息队列中。当链接的远端一旦开启的时候，消息将出队并被发送。</p>
+<p>每个消息就是一个字典，字符串key和强类型值：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xpc_dictionary_t message = xpc_dictionary_create(NULL, NULL, 0);</span><br><span class="line">xpc_dictionary_set_uint64(message, &quot;foo&quot;, 1);</span><br><span class="line">xpc_connection_send_message(c, message);</span><br><span class="line">xpc_release(message)</span><br></pre></td></tr></table></figure>
+
+<p>XPC对象对下列原始类型进行操作：</p>
+<ul>
+<li>Data</li>
+<li>Boolean</li>
+<li>Double</li>
+<li>String</li>
+<li>Signed Integer</li>
+<li>Unsigned Integer</li>
+<li>Date</li>
+<li>UUID</li>
+<li>Array</li>
+<li>Dictionary</li>
+<li>Null</li>
+</ul>
+<p>XPC提供了一个便捷的方法来从dispatch_data_t数据类型进行转换，这样从GCD到XPC的工作流程就简化了：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void *buffer;</span><br><span class="line">size_t length;</span><br><span class="line">dispatch_data_t ddata =</span><br><span class="line">    dispatch_data_create(buffer,</span><br><span class="line">                         length,</span><br><span class="line">                         DISPATCH_TARGET_QUEUE_DEFAULT,</span><br><span class="line">                         DISPATCH_DATA_DESTRUCTOR_MUNMAP);</span><br><span class="line"></span><br><span class="line">xpc_object_t xdata = xpc_data_create_with_dispatch_data(ddata);</span><br></pre></td></tr></table></figure>
+
+<h1 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h1><p>XPC可以注册成启动项任务，配置成匹配IOKit事件自动启动，BSD通知或者是CFDistributedNotifications。这些标准都指定在服务的launchd.plist文件里：<br>.launchd.plist</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;key&gt;LaunchEvents&lt;/key&gt;</span><br><span class="line">&lt;dict&gt;</span><br><span class="line">  &lt;key&gt;com.apple.iokit.matching&lt;/key&gt;</span><br><span class="line">  &lt;dict&gt;</span><br><span class="line">      &lt;key&gt;com.example.device-attach&lt;/key&gt;</span><br><span class="line">      &lt;dict&gt;</span><br><span class="line">          &lt;key&gt;idProduct&lt;/key&gt;</span><br><span class="line">          &lt;integer&gt;2794&lt;/integer&gt;</span><br><span class="line">          &lt;key&gt;idVendor&lt;/key&gt;</span><br><span class="line">          &lt;integer&gt;725&lt;/integer&gt;</span><br><span class="line">          &lt;key&gt;IOProviderClass&lt;/key&gt;</span><br><span class="line">          &lt;string&gt;IOUSBDevice&lt;/string&gt;</span><br><span class="line">          &lt;key&gt;IOMatchLaunchStream&lt;/key&gt;</span><br><span class="line">          &lt;true/&gt;</span><br><span class="line">          &lt;key&gt;ProcessType&lt;/key&gt;</span><br><span class="line">          &lt;string&gt;Adaptive&lt;/string&gt;</span><br><span class="line">      &lt;/dict&gt;</span><br><span class="line">  &lt;/dict&gt;</span><br><span class="line">&lt;/dict&gt;</span><br></pre></td></tr></table></figure>
+
+<p>最近一次对于launchd属性列表的修改是增加了ProcessType Key，其用来在高级层面上描述启动机构的预期目的。根据预描述行为期望，操作系统会响应调整CPU和I&#x2F;O的阈值。</p>
+<p><img src="/.io//articlex.png" alt="图片描述"></p>
+<p>为了注册一个服务运行大概五分钟的时间，一套标准需要传送给xpc_activity_register：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xpc_object_t criteria = xpc_dictionary_create(NULL, NULL, 0);</span><br><span class="line">xpc_dictionary_set_int64(criteria, XPC_ACTIVITY_INTERVAL, 5 * 60);</span><br><span class="line">xpc_dictionary_set_int64(criteria, XPC_ACTIVITY_GRACE_PERIOD, 10 * 60);</span><br><span class="line"></span><br><span class="line">xpc_activity_register(&quot;com.example.app.activity&quot;,</span><br><span class="line">                      criteria,</span><br><span class="line">                      ^(xpc_activity_t activity)</span><br><span class="line">&#123;</span><br><span class="line">    // Process Data</span><br><span class="line"></span><br><span class="line">    xpc_activity_set_state(activity, XPC_ACTIVITY_STATE_CONTINUE);</span><br><span class="line"></span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        // Update UI</span><br><span class="line"></span><br><span class="line">        xpc_activity_set_state(activity, XPC_ACTIVITY_STATE_DONE);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>底层原理</category>
+      </categories>
+      <tags>
+        <tag>底层原理</tag>
+        <tag>转载</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>iOS底层之RunLoop</title>
     <url>/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/</url>
     <content><![CDATA[<p>runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自<a href="http://blog.ibireme.com/2015/05/18/runloop/">此博客</a>。</p>
@@ -647,150 +791,6 @@
       <tags>
         <tag>RunLoop</tag>
         <tag>底层原理</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【转载】iOS进程间是如何通信的</title>
-    <url>/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/</url>
-    <content><![CDATA[<h1 id="总起"><a href="#总起" class="headerlink" title="总起"></a>总起</h1><p>OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。</p>
-<p>上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。</p>
-<p>由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）</p>
-<ul>
-<li>Mach Ports</li>
-<li>Distributed Notifications</li>
-<li>Distributed Objects</li>
-<li>AppleEvents &amp; AppleScript</li>
-<li>Pasteboard</li>
-<li>XPC</li>
-</ul>
-<p>从低级内核抽象到高级，面向对象的API，它们都有各自特殊的表现以及安全特性。但是基础层面来看，它们都是从不同上下文段传递或者获取数据的机制。</p>
-<span id="more"></span>
-
-<p><a href="https://nshipster.com/inter-process-communication/">原文链接</a>    <a href="https://segmentfault.com/a/1190000002400329">转载自此处</a></p>
-<h1 id="Mach-Ports"><a href="#Mach-Ports" class="headerlink" title="Mach Ports"></a>Mach Ports</h1><p>所有的进程间通讯最终落实依赖的还是Mach内核API提供的功能。</p>
-<p>Mach端口是轻量并且强大的而又缺少相关文档晦涩使用的（天使与恶魔）。</p>
-<p>通过一个Mach端口发送一个消息调用一次mach_msg_send方法，但是这里需要做一些配置来构建待发送的消息：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">natural_t data;</span><br><span class="line">mach_port_t port;</span><br><span class="line"></span><br><span class="line">struct &#123;</span><br><span class="line">    mach_msg_header_t header;</span><br><span class="line">    mach_msg_body_t body;</span><br><span class="line">    mach_msg_type_descriptor_t type;</span><br><span class="line">&#125; message;</span><br><span class="line"></span><br><span class="line">message.header = (mach_msg_header_t) &#123;</span><br><span class="line">    .msgh_remote_port = port,</span><br><span class="line">    .msgh_local_port = MACH_PORT_NULL,</span><br><span class="line">    .msgh_bits = MACH_MSGH_BITS(MACH_MSG_TYPE_COPY_SEND, 0),</span><br><span class="line">    .msgh_size = sizeof(message)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">message.body = (mach_msg_body_t) &#123;</span><br><span class="line">    .msgh_descriptor_count = 1</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">message.type = (mach_msg_type_descriptor_t) &#123;</span><br><span class="line">    .pad1 = data,</span><br><span class="line">    .pad2 = sizeof(data)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">mach_msg_return_t error = mach_msg_send(&amp;message.header);</span><br><span class="line"></span><br><span class="line">if (error == MACH_MSG_SUCCESS) &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>（消息）接收端稍微轻松点，因为消息只需要被声明而不用初始化：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">mach_port_t port;</span><br><span class="line"></span><br><span class="line">struct &#123;</span><br><span class="line">    mach_msg_header_t header;</span><br><span class="line">    mach_msg_body_t body;</span><br><span class="line">    mach_msg_type_descriptor_t type;</span><br><span class="line">    mach_msg_trailer_t trailer;</span><br><span class="line">&#125; message;</span><br><span class="line"></span><br><span class="line">mach_msg_return_t error = mach_msg_receive(&amp;message.header);</span><br><span class="line"></span><br><span class="line">if (error == MACH_MSG_SUCCESS) &#123;</span><br><span class="line">    natural_t data = message.type.pad1;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>还算不错的是，Core Foundation和Foundation为Mach端口提供了高级API。在内核基础上封装的CFMachPort &#x2F; NSMachPort可以用做runloop源，尽管CFMachPort &#x2F; NSMachPort有利于的是两个不同端口之间的通讯同步。</p>
-<p>CFMessagePort确实非常适合用于简单的一对一通讯。简简单单几行代码，一个本地端口就被附属到runloop源上，只要获取到消息就执行回调。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">static CFDataRef Callback(CFMessagePortRef port,</span><br><span class="line">                          SInt32 messageID,</span><br><span class="line">                          CFDataRef data,</span><br><span class="line">                          void *info)</span><br><span class="line">&#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CFMessagePortRef localPort =</span><br><span class="line">    CFMessagePortCreateLocal(nil,</span><br><span class="line">                             CFSTR(&quot;com.example.app.port.server&quot;),</span><br><span class="line">                             Callback,</span><br><span class="line">                             nil,</span><br><span class="line">                             nil);</span><br><span class="line"></span><br><span class="line">CFRunLoopSourceRef runLoopSource =</span><br><span class="line">    CFMessagePortCreateRunLoopSource(nil, localPort, 0);</span><br><span class="line"></span><br><span class="line">CFRunLoopAddSource(CFRunLoopGetCurrent(),</span><br><span class="line">                   runLoopSource,</span><br><span class="line">                   kCFRunLoopCommonModes);</span><br></pre></td></tr></table></figure>
-
-<p>若要进行发送数据同样也十分直截了当。只要完成指定远端的端口，装载数据，还有设置发送与接收的超时时间的操作。剩下就由CFMessagePortSendRequest来接管了。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CFDataRef data;</span><br><span class="line">SInt32 messageID = 0x1111; // Arbitrary</span><br><span class="line">CFTimeInterval timeout = 10.0;</span><br><span class="line"></span><br><span class="line">CFMessagePortRef remotePort =</span><br><span class="line">    CFMessagePortCreateRemote(nil,</span><br><span class="line">                              CFSTR(&quot;com.example.app.port.client&quot;));</span><br><span class="line"></span><br><span class="line">SInt32 status =</span><br><span class="line">    CFMessagePortSendRequest(remotePort,</span><br><span class="line">                             messageID,</span><br><span class="line">                             data,</span><br><span class="line">                             timeout,</span><br><span class="line">                             timeout,</span><br><span class="line">                             NULL,</span><br><span class="line">                             NULL);</span><br><span class="line">if (status == kCFMessagePortSuccess) &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="Distributed-Notifications"><a href="#Distributed-Notifications" class="headerlink" title="Distributed Notifications"></a>Distributed Notifications</h1><p>在Cocoa中有很多种两个对象进行通信的途径。</p>
-<p>当然也能进行直接消息传递。也有像目标-动作，代理，回调这些解耦，一对一的设计模式。KVO允许让很多对象订阅一个事件，但是它把这些对象都联系起来了。另一方面通知让消息全局广播，并且让有监听该广播的对象接收该消息。【注：想知道发了多少次广播吗？添加 NSNotificationCenter addObserverForName:object:queue:usingBlock，其中name与object置nil，看block被调用了几次。】</p>
-<p>每个应用为基础应用消息发布-订阅对自身通知中心实例进行管理。但是鲜有人知的APICFNotificationCenterGetDistributedCenter的通知可以进行系统级别范围的通信。</p>
-<p>为了获取通知，添加所要指定监听消息名的观察者到通知发布中心，当消息接收到的时候函数指针指向的函数将被执行一次：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">static void Callback(CFNotificationCenterRef center,</span><br><span class="line">                     void *observer,</span><br><span class="line">                     CFStringRef name,</span><br><span class="line">                     const void *object,</span><br><span class="line">                     CFDictionaryRef userInfo)</span><br><span class="line">&#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">CFNotificationCenterRef distributedCenter =</span><br><span class="line">    CFNotificationCenterGetDistributedCenter();</span><br><span class="line"></span><br><span class="line">CFNotificationSuspensionBehavior behavior =</span><br><span class="line">        CFNotificationSuspensionBehaviorDeliverImmediately;</span><br><span class="line"></span><br><span class="line">CFNotificationCenterAddObserver(distributedCenter,</span><br><span class="line">                                NULL,</span><br><span class="line">                                Callback,</span><br><span class="line">                                CFSTR(&quot;notification.identifier&quot;),</span><br><span class="line">                                NULL,</span><br><span class="line">                                behavior);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>发送端代码更为简单，只要配置好ID,对象还有user info：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void *object;</span><br><span class="line">CFDictionaryRef userInfo;</span><br><span class="line"></span><br><span class="line">CFNotificationCenterRef distributedCenter =</span><br><span class="line">    CFNotificationCenterGetDistributedCenter();</span><br><span class="line"></span><br><span class="line">CFNotificationCenterPostNotification(distributedCenter,</span><br><span class="line">                                     CFSTR(&quot;notification.identifier&quot;),</span><br><span class="line">                                     object,</span><br><span class="line">                                     userInfo,</span><br><span class="line">                                     true);</span><br></pre></td></tr></table></figure>
-
-<p>链接两个应用通信的方式中，分发式通知是最为简单的。用它来进行大量数据的传输是不明智的，但是对于轻量级信息同步，分发式通知堪称完美。</p>
-<h1 id="Distributed-Objects"><a href="#Distributed-Objects" class="headerlink" title="Distributed Objects"></a>Distributed Objects</h1><p>90年代中NeXT全盛时期，分发式对象（DO）是Cocoa框架中一个远程消息发送特性。尽管现在已经不再大范围的使用，在现代奇数层上IPC无障碍通信仍然并未实现。</p>
-<p>使用DO分发一个对象仅仅是搭建一个NSConnection并将其注册为特殊（你分的清楚）的名字：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@protocol Protocol;</span><br><span class="line"></span><br><span class="line">id &lt;Protocol&gt; vendedObject;</span><br><span class="line"></span><br><span class="line">NSConnection *connection = [[NSConnection alloc] init];</span><br><span class="line">[connection setRootObject:vendedObject];</span><br><span class="line">[connection registerName:@&quot;server&quot;];</span><br></pre></td></tr></table></figure>
-
-<p>另外一个应用将会也建立同样名字的并注册过的链接，然后立即获取一个原子代理当做原始对象。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">id proxy = [NSConnection rootProxyForConnectionWithRegisteredName:@&quot;server&quot; host:nil];</span><br><span class="line">[proxy setProtocolForProxy:@protocol(Protocol)];</span><br></pre></td></tr></table></figure>
-
-<p>只要分发对象代理收到消息了，一个通过NSConnection连接远程调用（RPC）将会根据发送对象进行对应的计算并且返回结果给代理。【注：原理是一个OS管理的共享的NSPortNameServer实例对这个带着名字的连接进行管控。】</p>
-<p>分发式对象简单，透明，健壮。简直就是Cocoa中的标杆。。。</p>
-<p>实际上，分布式对象不能像局部对象那样使用，那就是因为任何发送给代理的消息都可能抛出异常。不想其他语言，OC没有异常处理控制流程。所以对任何东西都进行@try&#x2F;@catch也算是Cocoa大会很凄凉的补救了。</p>
-<p>DO还有一个原因致其使用不便。在试图通过连接“marshal values”时，对象和原语的差距尤为明显。<br>此外，连接是完全加密的，和下方通信信道扩展性的缺乏致使其在大多数的使用中通信被迫中断。</p>
-<p>下方是左列分布式对象用来指定其属性代理行为和方法参数的注解：</p>
-<ul>
-<li>in：输入参数，后续不再引用</li>
-<li>out：参数被引用作为返回值</li>
-<li>inout：输入参数，引用作为返回值</li>
-<li>const：常量参数</li>
-<li>oneway：无障碍结果返回</li>
-<li>bycopy：返回对象的拷贝</li>
-<li>byref：返回对象的代理</li>
-</ul>
-<h1 id="AppleEvents-AppleScript"><a href="#AppleEvents-AppleScript" class="headerlink" title="AppleEvents &amp; AppleScript"></a>AppleEvents &amp; AppleScript</h1><p>AppleEvents是经典Macintosh操作系统最持久的遗产。在System 7推出的AppleEvents允许应用程序在本地使用AppleScript或者使用程序链接的功能进行程序控制。现在AppleScript使用Cocoa Scripting Bridge，仍然是OS X应用进程间最直接的交互方式。【注：Mac系统的苹果时间管理中心为AppleEvents提供了原始低级传送机制，但是是在OS X的Mach端口基础之上的重实现】。</p>
-<p>也就是说，使用起来这是简单而又古怪的技术之一。</p>
-<p>AppleScript使用自然语言语法，设计初衷是没有涉及参数而更容易掌握。虽然与人交流更亲和了，但是写起来确实噩梦。</p>
-<p>为了更好的了解人类自然性，这里有个栗子教你怎么让Safari在最前的窗口的激活栏打开一个URL。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">tell application &quot;Safari&quot;</span><br><span class="line">  set the URL of the front document to &quot;http://nshipster.com&quot;</span><br><span class="line">end tell</span><br></pre></td></tr></table></figure>
-
-<p>在大部分情况下，AppleScript的语法自然语言的特性更多是不便不是优势。（吐槽。。。略略略）</p>
-<p>即便是经验老道的OC开发者，不靠文档或者栗子写出AppleScript是不可能的任务。</p>
-<p>幸运的是，Scripting Bridge为Cocoa应用提供了更友善的编程接口。</p>
-<h1 id="Cocoa-Scripting-Bridge"><a href="#Cocoa-Scripting-Bridge" class="headerlink" title="Cocoa Scripting Bridge"></a>Cocoa Scripting Bridge</h1><p>为了使用Scripting Bridge与应用进行交互，首先要先添加一个编程接口：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ sdef /Applications/Safari.app | sdp -fh --basename Safari</span><br></pre></td></tr></table></figure>
-
-<p>sdef为应用生成脚本定义文件。这些文件可以以管道输入道sdp并格式转成（在这里是）C头文件。这样的结果是添加该头文件到应用工程并提供第一类对象接口。</p>
-<p>这里举个栗子来解释如何使用Cocoa Scripting Bridge：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#import &quot;Safari.h&quot;</span><br><span class="line"></span><br><span class="line">SafariApplication *safari = [SBApplication applicationWithBundleIdentifier:@&quot;com.apple.Safari&quot;];</span><br><span class="line"></span><br><span class="line">for (SafariWindow *window in safari.windows) &#123;</span><br><span class="line">    if (window.visible) &#123;</span><br><span class="line">        window.currentTab.URL = [NSURL URLWithString:@&quot;http://nshipster.com&quot;];</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>对比AppleScript上面显得冗繁了点，但是却更容易集成到已存在的代码中去。在可读性上更优因为毕竟长得更像OC。</p>
-<p>唉，AppleScript的星芒也正出现消退，在最近发布的OS X与iWork应用证答复减少它的戏份。从这点说，未必值得在你的应用中去添加这项（脚本）支持。</p>
-<h1 id="Pasteboard"><a href="#Pasteboard" class="headerlink" title="Pasteboard"></a>Pasteboard</h1><p>剪贴板是OS X与iOS最常见的进程间通信机制。当用户跨应用拷贝了一段文字，图片，文档，这时候通过mach port的com.apple.pboard服务媒介进行从一个进程到另一个进程的数据交换。</p>
-<p>OS X上是NSPasteboard，iOS上对应的是UIPasteboard。它们几乎是别无二致，但尽管大致一样，对比OS X iOS上提供了更简洁，更现代化却又不影响功效的API。</p>
-<p>编写剪贴板代码几乎就跟在GUI应用上使用Edit &gt; Copy操作一样简单：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NSImage *image;</span><br><span class="line"></span><br><span class="line">NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];</span><br><span class="line">[pasteboard clearContents];</span><br><span class="line">[pasteboard writeObjects:@[image]];</span><br></pre></td></tr></table></figure>
-
-<p>因为剪贴动作太频繁了，所以要确认剪贴内容是否是你（应用）所需要得：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">NSPasteboard *pasteboard = [NSPasteboard generalPasteboard];</span><br><span class="line"></span><br><span class="line">if ([pasteboard canReadObjectForClasses:@[[NSImage class]] options:nil]) &#123;</span><br><span class="line">    NSArray *contents = [pasteboard readObjectsForClasses:@[[NSImage class]] options: nil];</span><br><span class="line">    NSImage *image = [contents firstObject];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1 id="XPC"><a href="#XPC" class="headerlink" title="XPC"></a>XPC</h1><p>XPC是SDK中最先进的进程间通讯技术。它架构之初的目的在于避免长时间得运行过程，来适应有限的资源，在可能运行的时候才进行初始化。把XPC纳入应用而不做任何事情的想法是不现实的，但这样提供了更好的进程间的特权分离和故障隔离。</p>
-<p>XPC作为NSTask替代品甚至更多。</p>
-<p>2011推出以来，XPC为OS X上的应用沙盒提供基础设施，iOS上的远程试图控制器，还有两个平台上的应用扩展。它还广范围的用在系统框架和第一方应用：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ find /Applications -name \*.xpc</span><br></pre></td></tr></table></figure>
-
-<p>控制台输入上面的命令行你会知道XPC无处不在。在一般应用中同样的情形也在发生，比如图片或者视频转变服务，系统调用，网页服务加载，或是第三方的授权。</p>
-<p>XPC负责进程间通讯的同时还负责该服务生命周期的管理。包括注册服务，启动，以及通过launchd解决服务之间的通讯。一个XPC服务可以根据需求地洞，或者在崩溃的时候重启，或者是空闲的时候终止。正因如此，服务可以完全被设计成无状态的，以便于在运行的任何时间点的突然终止都能做到影响不大。</p>
-<p>作为被iOS还有OS X中backported所采用的安全模块，XPC服务默认运行在最为严格的环境：不能访问文件，不能访问网络，没有根权限升级。任何能做的事情就是对照被赋予的白名单列表。</p>
-<p>XPC可以被libxpc C API访问，或者是NSXPCConnection OC API。【注：作者会用低级API去实现（纯C）】</p>
-<p>XPC服务要么存在于应用的沙盒中亦或是使用launchd调用跑在后台。</p>
-<p>服务调用带事件句柄的xpc_main来获取新的XPC连接。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">static void connection_handler(xpc_connection_t peer) &#123;</span><br><span class="line">    xpc_connection_set_event_handler(peer, ^(xpc_object_t event) &#123;</span><br><span class="line">        peer_event_handler(peer, event);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    xpc_connection_resume(peer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, const char *argv[]) &#123;</span><br><span class="line">   xpc_main(connection_handler);</span><br><span class="line">   exit(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>每个XPC连接是一对一的，意味着服务在不同的连接进行操作，每次调用xpc_connection_create就会创建一个新的链接。【注：类似BSD套接字中的API accept函数，服务在单个文件描述符进行监听来为范围内的链接创建额外描述符】：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xpc_connection_t c = xpc_connection_create(&quot;com.example.service&quot;, NULL);</span><br><span class="line">xpc_connection_set_event_handler(c, ^(xpc_object_t event) &#123;</span><br><span class="line">    // ...</span><br><span class="line">&#125;);</span><br><span class="line">xpc_connection_resume(c);</span><br></pre></td></tr></table></figure>
-
-<p>当一个消息发送到XPC链接，将自动的派发到一个由runtime管理的消息队列中。当链接的远端一旦开启的时候，消息将出队并被发送。</p>
-<p>每个消息就是一个字典，字符串key和强类型值：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xpc_dictionary_t message = xpc_dictionary_create(NULL, NULL, 0);</span><br><span class="line">xpc_dictionary_set_uint64(message, &quot;foo&quot;, 1);</span><br><span class="line">xpc_connection_send_message(c, message);</span><br><span class="line">xpc_release(message)</span><br></pre></td></tr></table></figure>
-
-<p>XPC对象对下列原始类型进行操作：</p>
-<ul>
-<li>Data</li>
-<li>Boolean</li>
-<li>Double</li>
-<li>String</li>
-<li>Signed Integer</li>
-<li>Unsigned Integer</li>
-<li>Date</li>
-<li>UUID</li>
-<li>Array</li>
-<li>Dictionary</li>
-<li>Null</li>
-</ul>
-<p>XPC提供了一个便捷的方法来从dispatch_data_t数据类型进行转换，这样从GCD到XPC的工作流程就简化了：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void *buffer;</span><br><span class="line">size_t length;</span><br><span class="line">dispatch_data_t ddata =</span><br><span class="line">    dispatch_data_create(buffer,</span><br><span class="line">                         length,</span><br><span class="line">                         DISPATCH_TARGET_QUEUE_DEFAULT,</span><br><span class="line">                         DISPATCH_DATA_DESTRUCTOR_MUNMAP);</span><br><span class="line"></span><br><span class="line">xpc_object_t xdata = xpc_data_create_with_dispatch_data(ddata);</span><br></pre></td></tr></table></figure>
-
-<h1 id="服务注册"><a href="#服务注册" class="headerlink" title="服务注册"></a>服务注册</h1><p>XPC可以注册成启动项任务，配置成匹配IOKit事件自动启动，BSD通知或者是CFDistributedNotifications。这些标准都指定在服务的launchd.plist文件里：<br>.launchd.plist</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;key&gt;LaunchEvents&lt;/key&gt;</span><br><span class="line">&lt;dict&gt;</span><br><span class="line">  &lt;key&gt;com.apple.iokit.matching&lt;/key&gt;</span><br><span class="line">  &lt;dict&gt;</span><br><span class="line">      &lt;key&gt;com.example.device-attach&lt;/key&gt;</span><br><span class="line">      &lt;dict&gt;</span><br><span class="line">          &lt;key&gt;idProduct&lt;/key&gt;</span><br><span class="line">          &lt;integer&gt;2794&lt;/integer&gt;</span><br><span class="line">          &lt;key&gt;idVendor&lt;/key&gt;</span><br><span class="line">          &lt;integer&gt;725&lt;/integer&gt;</span><br><span class="line">          &lt;key&gt;IOProviderClass&lt;/key&gt;</span><br><span class="line">          &lt;string&gt;IOUSBDevice&lt;/string&gt;</span><br><span class="line">          &lt;key&gt;IOMatchLaunchStream&lt;/key&gt;</span><br><span class="line">          &lt;true/&gt;</span><br><span class="line">          &lt;key&gt;ProcessType&lt;/key&gt;</span><br><span class="line">          &lt;string&gt;Adaptive&lt;/string&gt;</span><br><span class="line">      &lt;/dict&gt;</span><br><span class="line">  &lt;/dict&gt;</span><br><span class="line">&lt;/dict&gt;</span><br></pre></td></tr></table></figure>
-
-<p>最近一次对于launchd属性列表的修改是增加了ProcessType Key，其用来在高级层面上描述启动机构的预期目的。根据预描述行为期望，操作系统会响应调整CPU和I&#x2F;O的阈值。</p>
-<p><img src="/.io//articlex.png" alt="图片描述"></p>
-<p>为了注册一个服务运行大概五分钟的时间，一套标准需要传送给xpc_activity_register：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">xpc_object_t criteria = xpc_dictionary_create(NULL, NULL, 0);</span><br><span class="line">xpc_dictionary_set_int64(criteria, XPC_ACTIVITY_INTERVAL, 5 * 60);</span><br><span class="line">xpc_dictionary_set_int64(criteria, XPC_ACTIVITY_GRACE_PERIOD, 10 * 60);</span><br><span class="line"></span><br><span class="line">xpc_activity_register(&quot;com.example.app.activity&quot;,</span><br><span class="line">                      criteria,</span><br><span class="line">                      ^(xpc_activity_t activity)</span><br><span class="line">&#123;</span><br><span class="line">    // Process Data</span><br><span class="line"></span><br><span class="line">    xpc_activity_set_state(activity, XPC_ACTIVITY_STATE_CONTINUE);</span><br><span class="line"></span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        // Update UI</span><br><span class="line"></span><br><span class="line">        xpc_activity_set_state(activity, XPC_ACTIVITY_STATE_DONE);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>底层原理</category>
-      </categories>
-      <tags>
-        <tag>底层原理</tag>
-        <tag>转载</tag>
       </tags>
   </entry>
   <entry>
