@@ -3,10 +3,10 @@
   <title>eziochiu</title>
   <icon>https://www.gravatar.com/avatar/1acddb61a28ee1ed443fc3731c50feb8</icon>
   <subtitle>一个会逆向的iOS工程师</subtitle>
-  <link href="/atom.xml" rel="self"/>
+  <link href="https://eziochiu.github.io/atom.xml" rel="self"/>
   
   <link href="https://eziochiu.github.io/"/>
-  <updated>2020-09-14T07:30:55.622Z</updated>
+  <updated>2023-07-21T08:14:38.539Z</updated>
   <id>https://eziochiu.github.io/</id>
   
   <author>
@@ -14,63 +14,60 @@
     <email>eziochiuchina@hotmail.com</email>
   </author>
   
-  <generator uri="http://hexo.io/">Hexo</generator>
+  <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
     <title>iOS Reveal2Loader修复版（iOS13修复）</title>
     <link href="https://eziochiu.github.io/2020/09/14/iOS%20Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%88iOS13%E4%BF%AE%E5%A4%8D%EF%BC%89/"/>
-    <id>https://eziochiu.github.io/2020/09/14/iOS Reveal2Loader修复版（iOS13修复）/</id>
+    <id>https://eziochiu.github.io/2020/09/14/iOS%20Reveal2Loader%E4%BF%AE%E5%A4%8D%E7%89%88%EF%BC%88iOS13%E4%BF%AE%E5%A4%8D%EF%BC%89/</id>
     <published>2020-09-14T07:20:00.000Z</published>
-    <updated>2020-09-14T07:30:55.622Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;今天同事说这个插件在iOS13越狱下失效了，所以就修复了在iOS13下无法窥探的bug，把RevealLoader库也更新到了24，附带&lt;a href=&quot;https://www.macwk.com/soft/reveal&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Reveal24下载地址&lt;/a&gt;。&lt;/p&gt;
-&lt;p&gt;修复后的Reveal源地址：&lt;a href=&quot;https://eziochiu.cn/cydia/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;https://eziochiu.cn/cydia/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&lt;del&gt;随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。&lt;/del&gt;&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="越狱插件" scheme="https://eziochiu.github.io/categories/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
+    <updated>2023-07-21T08:14:38.539Z</updated>
     
     
-      <category term="Reveal2Loader" scheme="https://eziochiu.github.io/tags/Reveal2Loader/"/>
+    <summary type="html">&lt;p&gt;今天同事说这个插件在iOS13越狱下失效了，所以就修复了在iOS13下无法窥探的bug，把RevealLoader库也更新到了24，附带&lt;a href=&quot;https://www.macwk.com/soft/reveal&quot;&gt;Reveal24下载地址&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;修复后的Reveal源地址：&lt;a href=&quot;https://eziochiu.cn/cydia/&quot;&gt;https://eziochiu.cn/cydia/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;随着iOS12 越狱的发布，又可以在iOS12的机器上随便搞事情了，但是今天突然发现安装bigBoss上的Reveal2Loader插件替换RevealLoader的库之后竟然无法窥探系统APP和第三方APP，然后在插间内部看到了作者的源码，于是心血来潮就进行了修改一番。&lt;/del&gt;&lt;/p&gt;</summary>
     
-      <category term="越狱插件" scheme="https://eziochiu.github.io/tags/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
+    
+    
+    <category term="越狱插件" scheme="https://eziochiu.github.io/categories/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
+    
+    
+    <category term="Reveal2Loader" scheme="https://eziochiu.github.io/tags/Reveal2Loader/"/>
+    
+    <category term="越狱插件" scheme="https://eziochiu.github.io/tags/%E8%B6%8A%E7%8B%B1%E6%8F%92%E4%BB%B6/"/>
     
   </entry>
   
   <entry>
     <title>如何利用RunLoop的知识来监测APP卡顿?</title>
     <link href="https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/"/>
-    <id>https://eziochiu.github.io/2019/09/11/如何利用RunLoop的知识来监测APP卡顿/</id>
+    <id>https://eziochiu.github.io/2019/09/11/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8RunLoop%E7%9A%84%E7%9F%A5%E8%AF%86%E6%9D%A5%E7%9B%91%E6%B5%8BAPP%E5%8D%A1%E9%A1%BF/</id>
     <published>2019-09-11T09:50:48.000Z</published>
-    <updated>2020-09-14T09:17:35.840Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;卡顿问题，就是在主线程上无法响应用户交互的问题。如果一个 App 时不时地就给你卡一下，有时还长时间无响应，这时你还愿意继续用它吗？所以说，卡顿问题对 App 的伤害是巨大的&lt;/p&gt;
-&lt;h2 id&gt;&lt;a href=&quot;#&quot; class=&quot;headerlink&quot; title&gt;&lt;/a&gt;&lt;/h2&gt;
-    
-    </summary>
-    
-      <category term="RunLoop" scheme="https://eziochiu.github.io/categories/RunLoop/"/>
+    <updated>2023-07-21T08:14:38.545Z</updated>
     
     
-      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
+    <summary type="html">&lt;p&gt;卡顿问题，就是在主线程上无法响应用户交互的问题。如果一个 App 时不时地就给你卡一下，有时还长时间无响应，这时你还愿意继续用它吗？所以说，卡顿问题对 App 的伤害是巨大的&lt;/p&gt;
+&lt;h2 id&gt;&lt;a href=&quot;#&quot; class=&quot;headerlink&quot; title&gt;&lt;/a&gt;&lt;/h2&gt;</summary>
+    
+    
+    
+    <category term="RunLoop" scheme="https://eziochiu.github.io/categories/RunLoop/"/>
+    
+    
+    <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
     
   </entry>
   
   <entry>
     <title>【转载】iOS进程间是如何通信的</title>
     <link href="https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/"/>
-    <id>https://eziochiu.github.io/2019/03/12/【转载】iOS进程-线程-间是如何通信的/</id>
+    <id>https://eziochiu.github.io/2019/03/12/%E3%80%90%E8%BD%AC%E8%BD%BD%E3%80%91iOS%E8%BF%9B%E7%A8%8B-%E7%BA%BF%E7%A8%8B-%E9%97%B4%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E4%BF%A1%E7%9A%84/</id>
     <published>2019-03-12T06:27:27.000Z</published>
-    <updated>2019-03-18T12:48:52.000Z</updated>
+    <updated>2023-07-21T08:14:38.545Z</updated>
     
-    <summary type="html">
     
-      &lt;h1 id=&quot;总起&quot;&gt;&lt;a href=&quot;#总起&quot; class=&quot;headerlink&quot; title=&quot;总起&quot;&gt;&lt;/a&gt;总起&lt;/h1&gt;&lt;p&gt;OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。&lt;/p&gt;
+    <summary type="html">&lt;h1 id=&quot;总起&quot;&gt;&lt;a href=&quot;#总起&quot; class=&quot;headerlink&quot; title=&quot;总起&quot;&gt;&lt;/a&gt;总起&lt;/h1&gt;&lt;p&gt;OS X是MacOS与NeXTSTEP的结合。OC是Smalltalk类面向对象编程与C的结合。iCloud则是苹果移动服务与云平台的结合。&lt;/p&gt;
 &lt;p&gt;上述都是一些亮点，但是不得不说苹果技术中的进程通讯走的是“反人类”的道路。&lt;/p&gt;
 &lt;p&gt;由于不是根据每个节点上最优原则进行设计，苹果的进程间通信解决方案更显得混乱扎堆。结果是，大量重叠，不兼容的IPC技术在各个抽象层随处可见。（除了GCD还有剪贴板）&lt;/p&gt;
 &lt;ul&gt;
@@ -81,162 +78,157 @@
 &lt;li&gt;Pasteboard&lt;/li&gt;
 &lt;li&gt;XPC&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;从低级内核抽象到高级，面向对象的API，它们都有各自特殊的表现以及安全特性。但是基础层面来看，它们都是从不同上下文段传递或者获取数据的机制。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+&lt;p&gt;从低级内核抽象到高级，面向对象的API，它们都有各自特殊的表现以及安全特性。但是基础层面来看，它们都是从不同上下文段传递或者获取数据的机制。&lt;/p&gt;</summary>
     
     
-      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
-      <category term="转载" scheme="https://eziochiu.github.io/tags/%E8%BD%AC%E8%BD%BD/"/>
+    <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+    
+    <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+    <category term="转载" scheme="https://eziochiu.github.io/tags/%E8%BD%AC%E8%BD%BD/"/>
     
   </entry>
   
   <entry>
     <title>iOS底层之Block</title>
     <link href="https://eziochiu.github.io/2018/06/22/iOS%E5%BA%95%E5%B1%82%E4%B9%8BBlock/"/>
-    <id>https://eziochiu.github.io/2018/06/22/iOS底层之Block/</id>
+    <id>https://eziochiu.github.io/2018/06/22/iOS%E5%BA%95%E5%B1%82%E4%B9%8BBlock/</id>
     <published>2018-06-22T10:38:52.000Z</published>
-    <updated>2019-03-20T01:54:42.000Z</updated>
+    <updated>2023-07-21T08:14:38.543Z</updated>
     
-    <summary type="html">
     
-      &lt;ul&gt;
+    <summary type="html">&lt;ul&gt;
 &lt;li&gt;在此之前需要先了解一个概念 - 闭包（swift中叫闭包），在维基百科中，闭包的定义如下：&lt;/li&gt;
 &lt;/ul&gt;
-&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;In programming languages, a closure is a function or reference to a function together with a referencing&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;environment—a table storing a reference to each of the non-local variables (also called free variables &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;or upvalues) of that function.&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight plaintext&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;In programming languages, a closure is a function or reference to a function together with a referencing&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;environment—a table storing a reference to each of the non-local variables (also called free variables &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;or upvalues) of that function.&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+
 &lt;p&gt;实际上就是一个指向函数的指针。而block实际上就是一个闭包。&lt;/p&gt;
-&lt;hr&gt;
-    
-    </summary>
-    
-      <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+&lt;hr&gt;</summary>
     
     
-      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
-      <category term="Block" scheme="https://eziochiu.github.io/tags/Block/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>iOS底层之RunLoop</title>
-    <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/"/>
-    <id>https://eziochiu.github.io/2018/04/20/iOS底层之RunLoop/</id>
-    <published>2018-04-20T09:38:52.000Z</published>
-    <updated>2019-03-18T12:53:35.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自&lt;a href=&quot;http://blog.ibireme.com/2015/05/18/runloop/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;此博客&lt;/a&gt;。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
     
-      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
+    <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
-      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    <category term="Block" scheme="https://eziochiu.github.io/tags/Block/"/>
     
   </entry>
   
   <entry>
     <title>iOS多线程编程之GCD(更新swift3.0用法)</title>
     <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8BGCD-%E6%9B%B4%E6%96%B0swift3-0%E7%94%A8%E6%B3%95/"/>
-    <id>https://eziochiu.github.io/2018/04/20/iOS多线程编程之GCD-更新swift3-0用法/</id>
+    <id>https://eziochiu.github.io/2018/04/20/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8BGCD-%E6%9B%B4%E6%96%B0swift3-0%E7%94%A8%E6%B3%95/</id>
     <published>2018-04-20T09:38:52.000Z</published>
-    <updated>2019-03-18T12:48:52.000Z</updated>
+    <updated>2023-07-21T08:14:38.543Z</updated>
     
-    <summary type="html">
     
-      &lt;blockquote&gt;
+    <summary type="html">&lt;blockquote&gt;
 &lt;p&gt;iOS多线程编程之GCD&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="多线程" scheme="https://eziochiu.github.io/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+&lt;/blockquote&gt;</summary>
     
     
-      <category term="多线程" scheme="https://eziochiu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     
-      <category term="GCD" scheme="https://eziochiu.github.io/tags/GCD/"/>
+    <category term="多线程" scheme="https://eziochiu.github.io/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    
+    <category term="多线程" scheme="https://eziochiu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    <category term="GCD" scheme="https://eziochiu.github.io/tags/GCD/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>iOS底层之RunLoop</title>
+    <link href="https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/"/>
+    <id>https://eziochiu.github.io/2018/04/20/iOS%E5%BA%95%E5%B1%82%E4%B9%8BRunLoop/</id>
+    <published>2018-04-20T09:38:52.000Z</published>
+    <updated>2023-07-21T08:14:38.543Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;runloop在iOS开发中是一个十分基础的概念，本文将从CFRunLoop入手，介绍runloop的概念和底层实现原理。然后介绍Apple是如何通过runloop在处理一些列的触摸事件和方法回调以及自动释放池等功能的。文中部分内容来自&lt;a href=&quot;http://blog.ibireme.com/2015/05/18/runloop/&quot;&gt;此博客&lt;/a&gt;。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+    
+    <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
+    
+    <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>AutoreleasePool源码分析</title>
     <link href="https://eziochiu.github.io/2018/03/15/AutoreleasePool%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/"/>
-    <id>https://eziochiu.github.io/2018/03/15/AutoreleasePool源码分析/</id>
+    <id>https://eziochiu.github.io/2018/03/15/AutoreleasePool%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/</id>
     <published>2018-03-15T02:53:48.000Z</published>
-    <updated>2019-03-18T12:48:52.000Z</updated>
+    <updated>2023-07-21T08:14:38.538Z</updated>
     
-    <summary type="html">
     
-      &lt;blockquote&gt;
+    <summary type="html">&lt;blockquote&gt;
 &lt;p&gt;AutoreleasePool（自动释放池）是OC中的一种内存自动回收机制，它可以延迟加入AutoreleasePool中的变量release的时机。在正常情况下，创建的变量会在超出其作用域的时候release，但是如果将变量加入AutoreleasePool，那么release将延迟执行。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+&lt;/blockquote&gt;</summary>
     
     
-      <category term="Autorelease" scheme="https://eziochiu.github.io/tags/Autorelease/"/>
     
-      <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
+    <category term="底层原理" scheme="https://eziochiu.github.io/categories/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
-      <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
+    
+    <category term="Autorelease" scheme="https://eziochiu.github.io/tags/Autorelease/"/>
+    
+    <category term="RunLoop" scheme="https://eziochiu.github.io/tags/RunLoop/"/>
+    
+    <category term="底层原理" scheme="https://eziochiu.github.io/tags/%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>Notification与多线程</title>
     <link href="https://eziochiu.github.io/2017/04/11/Notification%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
-    <id>https://eziochiu.github.io/2017/04/11/Notification与多线程/</id>
+    <id>https://eziochiu.github.io/2017/04/11/Notification%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/</id>
     <published>2017-04-11T09:38:52.000Z</published>
-    <updated>2019-03-18T12:48:52.000Z</updated>
+    <updated>2023-07-21T08:14:38.539Z</updated>
     
-    <summary type="html">
     
-      &lt;blockquote&gt;
+    <summary type="html">&lt;blockquote&gt;
 &lt;p&gt;前几天与同事讨论到Notification在多线程下的转发问题，所以就此整理一下。&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="多线程" scheme="https://eziochiu.github.io/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+&lt;/blockquote&gt;</summary>
     
     
-      <category term="通知" scheme="https://eziochiu.github.io/tags/%E9%80%9A%E7%9F%A5/"/>
     
-      <category term="多线程" scheme="https://eziochiu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    <category term="多线程" scheme="https://eziochiu.github.io/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    
+    <category term="通知" scheme="https://eziochiu.github.io/tags/%E9%80%9A%E7%9F%A5/"/>
+    
+    <category term="多线程" scheme="https://eziochiu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
     
   </entry>
   
   <entry>
     <title>iOS多线程编程之线程锁</title>
     <link href="https://eziochiu.github.io/2017/02/24/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E9%94%81/"/>
-    <id>https://eziochiu.github.io/2017/02/24/iOS多线程编程之线程锁/</id>
+    <id>https://eziochiu.github.io/2017/02/24/iOS%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B%E4%B9%8B%E7%BA%BF%E7%A8%8B%E9%94%81/</id>
     <published>2017-02-24T10:04:15.000Z</published>
-    <updated>2019-03-18T12:48:52.000Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h1 id=&quot;何所谓线程安全&quot;&gt;&lt;a href=&quot;#何所谓线程安全&quot; class=&quot;headerlink&quot; title=&quot;何所谓线程安全&quot;&gt;&lt;/a&gt;何所谓线程安全&lt;/h1&gt;&lt;p&gt;线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。&lt;/p&gt;
-&lt;p&gt;在iOS开发中常用的加锁方式有以下几种：&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="多线程" scheme="https://eziochiu.github.io/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    <updated>2023-07-21T08:14:38.543Z</updated>
     
     
-      <category term="多线程" scheme="https://eziochiu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    <summary type="html">&lt;h1 id=&quot;何所谓线程安全&quot;&gt;&lt;a href=&quot;#何所谓线程安全&quot; class=&quot;headerlink&quot; title=&quot;何所谓线程安全&quot;&gt;&lt;/a&gt;何所谓线程安全&lt;/h1&gt;&lt;p&gt;线程安全就是在多线程访问的同时，采用用了加锁机制，当一个线程访问该线程外的某个数据时，进行保护，其他线程不能进行访问，直到该线程读取完毕，其他线程才可以访问。保护线程安全无在乎就是对线程进行加锁。&lt;/p&gt;
+&lt;p&gt;在iOS开发中常用的加锁方式有以下几种：&lt;/p&gt;</summary>
     
-      <category term="iOS线程锁" scheme="https://eziochiu.github.io/tags/iOS%E7%BA%BF%E7%A8%8B%E9%94%81/"/>
+    
+    
+    <category term="多线程" scheme="https://eziochiu.github.io/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    
+    <category term="多线程" scheme="https://eziochiu.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+    
+    <category term="iOS线程锁" scheme="https://eziochiu.github.io/tags/iOS%E7%BA%BF%E7%A8%8B%E9%94%81/"/>
     
   </entry>
   
